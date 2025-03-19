@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_account_circle"
+        />
+
+    <item
+        android:id="@+id/courses"
+        android:title="Courses"
+        android:icon="@drawable/ic_precision_manufacturing"
+        />
+
+    <item
+        android:id="@+id/community"
+        android:title="Community"
+        android:icon="@drawable/ic_group"
+        />
+
+    <item
+        android:id="@+id/ranking"
+        android:title="Ranking"
+        android:icon="@drawable/ic_military_tech"
+        />
+
+</menu>
