@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">LearnLeague</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="community">Community</string>
+    <string name="profile">Profile</string>
+    <string name="courses">Courses</string>
+    <string name="ranking">Ranking</string>
+    <string name="Ranking">Ranking</string>
 </resources>

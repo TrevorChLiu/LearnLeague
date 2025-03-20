@@ -8,9 +8,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    Fragment profileFragment = new ProfileFragment();
+    Fragment coursesFragment = new CoursesFragment();
+    Fragment communityFragment = new CommunityFragment();
+    Fragment rankingFragment = new RankingFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +30,28 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // initialize app bars
-        Toolbar actionBar = (Toolbar) findViewById(R.id.action_bar);
-        setSupportActionBar(actionBar);
+        // Implement bottom nav bar's functionality
+        replaceFragment(profileFragment);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.nav_bar);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.profile) {
+                replaceFragment(profileFragment);
+            } else if (item.getItemId() == R.id.courses) {
+                replaceFragment(coursesFragment);
+            } else if (item.getItemId() == R.id.community) {
+                replaceFragment(communityFragment);
+            } else {
+                replaceFragment(rankingFragment);
+            }
+
+            return true;
+        });
     }
+    private void replaceFragment(Fragment newFragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_placeholder, newFragment)
+                .commit();
+    }
+
 }
+

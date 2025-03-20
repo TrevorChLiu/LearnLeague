@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/profile"
-        android:title="Profile"
+        android:title="@string/profile"
         android:icon="@drawable/ic_account_circle"
         />
 
     <item
         android:id="@+id/courses"
-        android:title="Courses"
+        android:title="@string/courses"
         android:icon="@drawable/ic_precision_manufacturing"
         />
 
@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/ranking"
-        android:title="Ranking"
+        android:title="@string/Ranking"
         android:icon="@drawable/ic_military_tech"
         />
 
