@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Hold those fragments object until process ends
     Fragment profileFragment = new ProfileFragment();
     Fragment coursesFragment = new CoursesFragment();
     Fragment communityFragment = new CommunityFragment();
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
     }
+
+    /**
+     * Replace the current shown fragment with another.
+     * @param newFragment New fragment.
+     */
     private void replaceFragment(Fragment newFragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_placeholder, newFragment)
