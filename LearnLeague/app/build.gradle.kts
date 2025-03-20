@@ -37,11 +37,13 @@ android {
 }
 
 dependencies {
+    // for fragment
     val fragment_version = "1.8.6"
-    // Java language implementation
     implementation("androidx.fragment:fragment:$fragment_version")
-    // Kotlin
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
+
+    // for connection
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)
