@@ -4,4 +4,20 @@
     <color name="white">#FFFFFFFF</color>
     <color name="dark_grayish_blue">#343541</color>
     <color name="very_dark_gray">#202123</color>
+    <color name="middle_gray">#718096</color>
+    <color name="dark_gray">#2d3748</color>
+    <color name="light_gray">#cbd5e0</color>
+    <color name="middle_cyan">#155e75</color>
+
+    - **$cyan-100:** #cffafe
+    - **$cyan-200:** #a5f3fc
+    - **$cyan-300:** #67e8f9
+    - **$cyan-400:** #22d3ee
+    - **$cyan-500:** #06b6d4
+    - **$cyan-600:** #0891b2
+    - **$cyan-700:** #0e7490
+    - **$cyan-800:** #155e75
+    - **$cyan-900:** #164e63
+
+
 </resources>

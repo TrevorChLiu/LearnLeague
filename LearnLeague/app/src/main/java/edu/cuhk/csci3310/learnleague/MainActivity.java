@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
      * Replace the current shown fragment with another.
      * @param newFragment New fragment.
      */
-    private void replaceFragment(Fragment newFragment) {
+    public void replaceFragment(Fragment newFragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_placeholder, newFragment)
                 .commit();
