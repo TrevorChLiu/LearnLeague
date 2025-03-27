@@ -12,6 +12,26 @@ def get_db_connection():
         database="learn_league_db"
     )
 
+@app.route('/create_user', methods=['POST'])
+def create_user():
+    data = request.json
+    user_id = data.get("userid")
+    hashed_password = data.get("hashedpassword")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("INSERT INTO users (user_id, hashed_password) VALUES (%s, %s)", 
+                       (user_id, hashed_password))
+        conn.commit()
+        return "User created"
+    except mysql.connector.Error as err:
+        return "Failed to create user: " + str(err)
+    finally:
+        cursor.close()
+        conn.close()
+
 # Test connection
 @app.route('/test_conn', methods=['POST'])
 def test_conn():
@@ -33,4 +53,4 @@ def test_conn():
         conn.close()
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
