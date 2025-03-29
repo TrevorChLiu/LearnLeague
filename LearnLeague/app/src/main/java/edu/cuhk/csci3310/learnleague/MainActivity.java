@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_bar);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.profile) {
-                replaceFragment(profileFragment);
+                replaceFragment(new ProfileFragment());
             } else if (item.getItemId() == R.id.courses) {
                 replaceFragment(coursesFragment);
             } else if (item.getItemId() == R.id.community) {

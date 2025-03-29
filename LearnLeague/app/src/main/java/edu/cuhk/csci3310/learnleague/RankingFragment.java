@@ -66,7 +66,7 @@ public class RankingFragment extends Fragment {
         // Set up the button click listener
         Button myButton = view.findViewById(R.id.myButton);
         myButton.setOnClickListener(v -> {
-            new User("Trev", "some secret");
+            User.createUser("Trev", "some secret");
         });
 
         return view;

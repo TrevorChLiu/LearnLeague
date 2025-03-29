@@ -5,9 +5,12 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -68,6 +71,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        // Create the nav tab layout for this page
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager2);
         viewPagerAdapter = new ViewPagerAdapter(this);
@@ -97,6 +101,30 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+        // Show the profile owner's personal information
+        User owner = new User("Trevor");
+        updateProfileView(view, owner);
+
         return view;
+    }
+
+    /**
+     * Update the profile view with latest information
+     * @param view The View of profile
+     * @param owner Latest owner
+     */
+    private void updateProfileView(View view, User owner) {
+        EditText username = view.findViewById(R.id.username);
+        TextView userID = view.findViewById(R.id.user_id);
+        EditText email = view.findViewById(R.id.email);
+        TextView following = view.findViewById(R.id.following);
+        TextView followers = view.findViewById(R.id.followers);
+
+        username.setText(owner.getUserName());
+        userID.setText("@" + owner.getUserID());
+        email.setText(owner.getUserEmail());
+        following.setText(owner.getNumFollowing() + " Following");
+        followers.setText(owner.getNumFollowers() + " Followers");
     }
 }
