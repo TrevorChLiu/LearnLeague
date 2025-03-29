@@ -80,6 +80,8 @@ def update_user():
     email = data.get("email")
     avatar = data.get("avatar")
 
+    print("new Username: ", username)
+
     conx = get_db_connection()
     cursor = conx.cursor()
     try:
@@ -96,6 +98,9 @@ def update_user():
                 WHERE user_id = %s
             """, (hashed_password, username, email, base64.b64decode(avatar), user_id))
         conx.commit()
+        rows_affected = cursor.rowcount
+        print("userID", user_id)
+        print("Rows affected:", rows_affected)
         return "User information updated"
     except mysql.connector.Error as err:
         return "Failed to update user: " + str(err)

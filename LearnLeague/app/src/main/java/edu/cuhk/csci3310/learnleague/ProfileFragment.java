@@ -11,6 +11,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,7 +121,6 @@ public class ProfileFragment extends Fragment {
 
 
         // Show the profile owner's personal information
-        User owner = new User("Trevor");
         updateProfileView(view, owner);
 
         // Allow change avatar
@@ -128,6 +129,46 @@ public class ProfileFragment extends Fragment {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
             startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+        });
+
+        // Allow changed username and email to be stored
+        EditText usernameInput = view.findViewById(R.id.username);
+        EditText emailInput = view.findViewById(R.id.email);
+
+        usernameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String newUsername = s.toString();
+                owner.updateUserName(newUsername);
+            }
+        });
+
+        emailInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String newEmail = s.toString();
+                owner.updateEmail(newEmail);
+            }
         });
 
         return view;
