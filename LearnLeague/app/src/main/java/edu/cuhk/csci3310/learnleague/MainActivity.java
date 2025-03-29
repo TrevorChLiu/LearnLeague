@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment rankingFragment = new RankingFragment();
 
     // Account owner
-    User owner = new User("Trev");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        // Initialize account user
+        User.initUser("Trev");
     }
 
     /**
@@ -62,12 +64,6 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    /**
-     * Get the User object of current account.
-     * @return Account owner.
-     */
-    public User getOwner() {
-        return owner;
-    }
+
 }
 

@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -47,7 +48,6 @@ public class ProfileFragment extends Fragment {
     private ViewPager2 viewPager2;
     private ViewPagerAdapter viewPagerAdapter;
     private View view;
-    private User owner;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -79,7 +79,6 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        owner = ((MainActivity) getActivity()).getOwner();
     }
 
     @Override
@@ -121,7 +120,7 @@ public class ProfileFragment extends Fragment {
 
 
         // Show the profile owner's personal information
-        updateProfileView(view, owner);
+        updateProfileView(view, User.getUser());
 
         // Allow change avatar
         ImageView avatar = view.findViewById(R.id.avatar);
@@ -149,7 +148,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String newUsername = s.toString();
-                owner.updateUserName(newUsername);
+                User.getUser().updateUserName(newUsername);
             }
         });
 
@@ -167,7 +166,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String newEmail = s.toString();
-                owner.updateEmail(newEmail);
+                User.getUser().updateEmail(newEmail);
             }
         });
 
@@ -182,8 +181,9 @@ public class ProfileFragment extends Fragment {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                ((ImageView)view.findViewById(R.id.avatar)).setImageBitmap(selectedImage);
-                owner.updateAvatar(selectedImage);
+                Bitmap compressedImage = compressBitmapOnTheFly(selectedImage, 10);
+                ((ImageView)view.findViewById(R.id.avatar)).setImageBitmap(compressedImage);
+                User.getUser().updateAvatar(compressedImage);
             } catch (FileNotFoundException e) {
                 Log.e("Image saver", "Can't find the image");
             }
@@ -210,6 +210,16 @@ public class ProfileFragment extends Fragment {
         email.setText(owner.getUserEmail());
         following.setText(owner.getNumFollowing() + " Following");
         followers.setText(owner.getNumFollowers() + " Followers");
+        if (owner.getAvatar() != null) {
+            avatar.setImageBitmap(owner.getAvatar());
+        }
+    }
 
+    public static Bitmap compressBitmapOnTheFly(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+
+        byte[] compressedByteArray = byteArrayOutputStream.toByteArray();
+        return BitmapFactory.decodeByteArray(compressedByteArray, 0, compressedByteArray.length);
     }
 }

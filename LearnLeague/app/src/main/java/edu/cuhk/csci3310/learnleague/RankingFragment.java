@@ -66,9 +66,8 @@ public class RankingFragment extends Fragment {
         // Set up the button click listener
         Button myButton = view.findViewById(R.id.myButton);
         myButton.setOnClickListener(v -> {
-            User user = ((MainActivity) getActivity()).getOwner();
-            user.updateUserName("Steve");
-            user.updateEmail("4566@gmail.com");
+            User.getUser().updateUserName("Steve");
+            User.getUser().updateEmail("4566@gmail.com");
         });
 
         return view;

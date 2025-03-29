@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import mysql.connector
 import sys
 import base64
@@ -11,7 +11,8 @@ def get_db_connection():
         host="localhost", 
         user="Trev",    # Change to yours
         password="20031231Lch.",    # Change to yours
-        database="learn_league_db"
+        database="learn_league_db",
+        consume_results=True  # Helps with large data retrieval
     )
 
 # Create all necessary tables
@@ -80,8 +81,6 @@ def update_user():
     email = data.get("email")
     avatar = data.get("avatar")
 
-    print("new Username: ", username)
-
     conx = get_db_connection()
     cursor = conx.cursor()
     try:
@@ -92,6 +91,8 @@ def update_user():
                 WHERE user_id = %s
             """, (hashed_password, username, email, user_id))
         else:
+            print("original: ", len(avatar))
+            print("original bytes:", len(base64.b64decode(avatar)))
             cursor.execute("""
                 UPDATE users 
                 SET hashed_password = %s, username = %s, email = %s, avatar = %s 
@@ -99,14 +100,54 @@ def update_user():
             """, (hashed_password, username, email, base64.b64decode(avatar), user_id))
         conx.commit()
         rows_affected = cursor.rowcount
-        print("userID", user_id)
-        print("Rows affected:", rows_affected)
-        return "User information updated"
+        return f"User information updated, {rows_affected} rows are affected."
     except mysql.connector.Error as err:
         return "Failed to update user: " + str(err)
     finally:
         cursor.close()
         conx.close()
+
+# Obtain a user's information
+@app.route('/get_user', methods=['POST'])
+def get_user():
+    data = request.json
+    user_id = data.get("userid")
+
+    conx = get_db_connection()
+    cursor = conx.cursor()
+    try:
+        cursor.execute("""
+            SELECT user_id, hashed_password, username, email, avatar
+            FROM users
+            WHERE user_id = %s
+        """, (user_id,))
+        
+        user = cursor.fetchone()[:4]
+
+        if user:
+
+
+            user_info = {
+                'userid': user[0],
+                'hashedpassword': user[1],
+                'username': user[2],
+                'email': user[3],
+            }
+            print("Original: ", user[2])
+            print("Non Jsonify: ", user_info.get("username"))
+            return jsonify(user_info), 200
+        else:
+            return jsonify({
+                'message': "404: User Not Found!"
+            }), 404
+    except mysql.connector.Error as err:
+        return jsonify({
+            "message": "500: Failed to read user!"
+        }), 500
+    finally:
+        cursor.close()
+        conx.close()
+
 
 # Drop all tables from the db
 def drop_all_tables():

@@ -1,7 +1,13 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class User {
     private String userID;
@@ -13,19 +19,37 @@ public class User {
     private int numFollowers;
     private int numFollowing;
 
-    public User(String userID) {
-        this.userID = userID;
-        hashedPassword = 12345;
-        userName = "Trevor Liu";
-        userEmail = "trevor_chenhe_liu@foxmail.com";
-        avatar = null;
-        numFollowers = 1200;
-        numFollowing = 100;
+    private static User user;
+
+    /**
+     * A helper class only be called by another Constructor
+     */
+    private User() {
+        // Simply do nothing
     }
 
-    public static User createUser(String userID, String password) {
+    protected void userSetup(String userID, int hashedPassword, String userName, String userEmail) {
+        User.user.userID = userID;
+        User.user.hashedPassword = hashedPassword;
+        User.user.userName = userName;
+        User.user.userEmail = userEmail;
+    }
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void initUser(String userID) {
+        user = new User();
+        user.userID = userID;
+
+        ApiClient.getUser(userID);
+    }
+
+
+
+    public static void createUser(String userID, String password) {
         ApiClient.createUser(userID, password.hashCode());
-        return new User(userID);
     }
 
     public void updatePassword(String password) {
@@ -44,6 +68,7 @@ public class User {
     }
 
     public void updateAvatar(Bitmap newAvatar) {
+
         avatar = newAvatar;
         updateUser();
     }
@@ -79,4 +104,6 @@ public class User {
     public Bitmap getAvatar() {
         return avatar;
     }
+
 }
+
