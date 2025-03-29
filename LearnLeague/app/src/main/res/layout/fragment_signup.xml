@@ -46,6 +46,7 @@
         android:layout_marginRight="30dp"
         android:textColorHint="@color/dark_gray"
         android:paddingStart="15dp"
+        android:maxLength="20"
         />
     <TextView
         android:id="@+id/password_hint"
@@ -72,6 +73,7 @@
         android:layout_marginRight="30dp"
         android:textColorHint="@color/dark_gray"
         android:paddingStart="15dp"
+        android:maxLength="20"
         />
 
     <TextView
@@ -99,6 +101,7 @@
         android:layout_marginRight="30dp"
         android:textColorHint="@color/dark_gray"
         android:paddingStart="15dp"
+        android:maxLength="20"
         />
 
     <Button

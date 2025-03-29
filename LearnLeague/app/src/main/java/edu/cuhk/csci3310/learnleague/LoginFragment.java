@@ -112,8 +112,6 @@ public class LoginFragment extends Fragment {
     }
 
     private Boolean validateLogin(String accountid, String password) {
-        if (!accountid.isEmpty())
-            return true;
-        return false;
+        return true;
     }
 }
