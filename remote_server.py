@@ -1,5 +1,6 @@
 from flask import Flask, request
 import mysql.connector
+import sys
 
 app = Flask(__name__)
 
@@ -85,5 +86,38 @@ def test_conn():
         cursor.close()
         conn.close()
 
+# Drop all tables from the db
+def drop_all_tables():
+    conx = get_db_connection()
+    cursor = conx.cursor()
+
+    try:
+        # Disable foreign key checks
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+
+        # Get all table names
+        cursor.execute("SHOW TABLES;")
+        tables = cursor.fetchall()
+
+        for table in tables:
+            print(f"Dropping table: {table[0]}")
+            cursor.execute(f"DROP TABLE {table[0]};")
+
+        # Enable foreign key checks
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+
+        conx.commit()
+        print("Dropped all tables successfully.")
+
+    except mysql.connector.Error as err:
+        print("Fail to drop tables:", err)
+
+    finally:
+        cursor.close()
+        conx.close()
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    if len(sys.argv) == 1:
+        app.run(host="0.0.0.0", port=5000, debug=True)
+    elif "reset" in sys.argv:
+        drop_all_tables()
