@@ -15,10 +15,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     // Hold those fragments object until process ends
-    Fragment profileFragment = new ProfileFragment();
-    Fragment coursesFragment = new CoursesFragment();
-    Fragment communityFragment = new CommunityFragment();
-    Fragment rankingFragment = new RankingFragment();
+    private Fragment coursesFragment = new CoursesFragment();
+    private Fragment communityFragment = new CommunityFragment();
+    private Fragment rankingFragment = new RankingFragment();
+
+    // Account owner
+    User owner = new User("Trev");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,5 +62,12 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * Get the User object of current account.
+     * @return Account owner.
+     */
+    public User getOwner() {
+        return owner;
+    }
 }
 

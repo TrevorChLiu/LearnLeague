@@ -1,5 +1,11 @@
 package edu.cuhk.csci3310.learnleague;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,9 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +36,7 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int RESULT_LOAD_IMG = 12345;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -32,6 +44,8 @@ public class ProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private ViewPagerAdapter viewPagerAdapter;
+    private View view;
+    private User owner;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -63,6 +77,7 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        owner = ((MainActivity) getActivity()).getOwner();
     }
 
     @Override
@@ -70,6 +85,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        this.view = view;
 
         // Create the nav tab layout for this page
         tabLayout = view.findViewById(R.id.tabLayout);
@@ -106,7 +122,33 @@ public class ProfileFragment extends Fragment {
         User owner = new User("Trevor");
         updateProfileView(view, owner);
 
+        // Allow change avatar
+        ImageView avatar = view.findViewById(R.id.avatar);
+        avatar.setOnClickListener(v -> {
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+        });
+
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ((ImageView)view.findViewById(R.id.avatar)).setImageBitmap(selectedImage);
+                owner.updateAvatar(selectedImage);
+            } catch (FileNotFoundException e) {
+                Log.e("Image saver", "Can't find the image");
+            }
+        }else {
+            Log.d("Image saver", "Haven't selected image");
+        }
     }
 
     /**
@@ -120,11 +162,13 @@ public class ProfileFragment extends Fragment {
         EditText email = view.findViewById(R.id.email);
         TextView following = view.findViewById(R.id.following);
         TextView followers = view.findViewById(R.id.followers);
+        ImageView avatar = view.findViewById(R.id.avatar);
 
         username.setText(owner.getUserName());
         userID.setText("@" + owner.getUserID());
         email.setText(owner.getUserEmail());
         following.setText(owner.getNumFollowing() + " Following");
         followers.setText(owner.getNumFollowers() + " Followers");
+
     }
 }

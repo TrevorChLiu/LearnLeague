@@ -1,5 +1,7 @@
 package edu.cuhk.csci3310.learnleague;
 
+import android.util.Log;
+
 import okhttp3.*;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -74,12 +76,16 @@ public class ApiClient {
         });
     }
 
-    public static void testConn() {
+    public static void updateUser(User user) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
 
         try {
-            json.put("message", "Welcome!");
+            json.put("userid", user.getUserID());
+            json.put("hashedpassword", user.getHashedPassword());
+            json.put("username", user.getUserName());
+            json.put("email", user.getUserEmail());
+            json.put("avatar", user.getAvatar());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +96,7 @@ public class ApiClient {
         );
 
         Request request = new Request.Builder()
-                .url(BASE_URL + "/test_conn")
+                .url(BASE_URL + "/update_user")
                 .post(body)
                 .build();
 
@@ -106,5 +112,6 @@ public class ApiClient {
             }
         });
     }
+
 }
 

@@ -1,6 +1,7 @@
 from flask import Flask, request
 import mysql.connector
 import sys
+import base64
 
 app = Flask(__name__)
 
@@ -35,8 +36,11 @@ def check_table_user(conx, cursor):
     if not cursor.fetchone():
         cursor.execute("""
         CREATE TABLE users (
-            user_id VARCHAR(50) NOT NULL PRIMARY KEY,
-            hashed_password INT NOT NULL
+            user_id VARCHAR(20) NOT NULL PRIMARY KEY,
+            hashed_password INT NOT NULL,
+            username VARCHAR(20),
+            email VARCHAR(45) DEFAULT '',
+            avatar BLOB
         )
         """)
         conx.commit()
@@ -52,39 +56,52 @@ def create_user():
     user_id = data.get("userid")
     hashed_password = data.get("hashedpassword")
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    conx = get_db_connection()
+    cursor = conx.cursor()
 
     try:
-        cursor.execute("INSERT INTO users (user_id, hashed_password) VALUES (%s, %s)", 
-                       (user_id, hashed_password))
-        conn.commit()
+        cursor.execute("INSERT INTO users (user_id, hashed_password, username) VALUES (%s, %s, %s)", 
+                       (user_id, hashed_password, user_id))
+        conx.commit()
         return "User created"
     except mysql.connector.Error as err:
         return "Failed to create user: " + str(err)
     finally:
         cursor.close()
-        conn.close()
+        conx.close()
 
-# Test connection
-@app.route('/test_conn', methods=['POST'])
-def test_conn():
+# Update an user's data
+@app.route('/update_user', methods=['POST'])
+def update_user():
     data = request.json
-    msg = data.get("message")
+    user_id = data.get("userid")
+    hashed_password = data.get("hashedpassword")
+    username = data.get("username")
+    email = data.get("email")
+    avatar = data.get("avatar")
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
+    conx = get_db_connection()
+    cursor = conx.cursor()
     try:
-        cursor.execute("INSERT INTO testtable (message) VALUES (%s)", 
-                       (msg, ))
-        conn.commit()
-        return "Test Passes!"
+        if avatar is None:  # If no avatar is provided (None sent from the client)
+            cursor.execute("""
+                UPDATE users 
+                SET hashed_password = %s, username = %s, email = %s, avatar = NULL 
+                WHERE user_id = %s
+            """, (hashed_password, username, email, user_id))
+        else:
+            cursor.execute("""
+                UPDATE users 
+                SET hashed_password = %s, username = %s, email = %s, avatar = %s 
+                WHERE user_id = %s
+            """, (hashed_password, username, email, base64.b64decode(avatar), user_id))
+        conx.commit()
+        return "User information updated"
     except mysql.connector.Error as err:
-        return "Test fails!"
+        return "Failed to update user: " + str(err)
     finally:
         cursor.close()
-        conn.close()
+        conx.close()
 
 # Drop all tables from the db
 def drop_all_tables():
