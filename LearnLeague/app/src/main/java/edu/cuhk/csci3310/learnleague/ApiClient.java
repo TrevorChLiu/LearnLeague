@@ -11,7 +11,34 @@ public class ApiClient {
     // remote server's address
     private static final String BASE_URL = "http://10.0.2.2:5000";
 
+    /**
+     * Initialize the database
+     */
+    public static void initializeDB() {
+        OkHttpClient client = new OkHttpClient();
 
+        RequestBody body = RequestBody.create(
+                "".toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/initialize_db")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println(response.body().string());
+            }
+        });
+    }
 
     public static void createUser(String userID, int hashedPassword) {
         OkHttpClient client = new OkHttpClient();

@@ -12,6 +12,39 @@ def get_db_connection():
         database="learn_league_db"
     )
 
+# Create all necessary tables
+@app.route("/initialize_db", methods=["post"])
+def initialize_db():
+    conx = get_db_connection()
+    cursor = conx.cursor()
+    responses = []
+
+    responses.append(check_table_user(conx, cursor))
+    
+    cursor.close()
+    conx.close()
+
+    return "; ".join(responses)
+
+def check_table_user(conx, cursor):
+    # Check table existence
+    cursor.execute("SHOW TABLES LIKE 'users'")
+    
+    # If the table doesn't exist, create it
+    if not cursor.fetchone():
+        cursor.execute("""
+        CREATE TABLE users (
+            user_id VARCHAR(50) NOT NULL PRIMARY KEY,
+            hashed_password INT NOT NULL
+        )
+        """)
+        conx.commit()
+        response = "Table 'users' created."
+    else:
+        response = "Table 'users' exists."
+    return response
+
+
 @app.route('/create_user', methods=['POST'])
 def create_user():
     data = request.json

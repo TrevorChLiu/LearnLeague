@@ -29,6 +29,9 @@ public class LoginActivity extends AppCompatActivity {
         // initially shows login page
         replaceFragment(new LoginFragment());
 
+        // Initialize the database
+        ApiClient.initializeDB();
+
     }
 
     /**
