@@ -239,29 +239,5 @@ public class ApiClient {
         });
     }
 
-
-
-
-    /**
-     * Decode base64 string from json response to bitmap.
-     * @param base64String the encoded string.
-     * @return The bitmap image file.
-     */
-    private static Bitmap decodeBase64ToBitmap(String base64String) {
-        try {
-            byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static String encodeBitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
 }
 

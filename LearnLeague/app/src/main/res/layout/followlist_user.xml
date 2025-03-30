@@ -22,12 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_weight="1"
         >
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="abcdefghijklmnopqrst"
+            android:text="Username"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/white" />
@@ -35,7 +36,7 @@
             android:id="@+id/user_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="\@abcdefghijklmnopqrst"
+            android:text="\@user_id"
             android:textSize="16sp"
             android:textColor="@color/middle_gray" />
     </LinearLayout>
@@ -43,7 +44,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="end"
+        android:gravity="center"
         android:backgroundTint="@color/light_gray"
         android:textColor="@color/black"
         android:text="Following"

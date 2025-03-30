@@ -1,16 +1,12 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import androidx.annotation.NonNull;
@@ -21,10 +17,9 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
     private Context context;
     private LayoutInflater mInflater;
 
-    private LinkedList<User> usersList;
+    private LinkedList<User> mUsersList;
 
     // the following pre-set res image path is for debugging, but good to let students to start with
-    private String mDrawableFilePath = "android.resource://edu.cuhk.csci3310.cusweetspot/drawable/";
 
     class FollowViewHolder extends RecyclerView.ViewHolder {
 
@@ -53,9 +48,9 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
     }
 
     public FollowListAdapter(Context context,
-                             LinkedList<User> usersList) {
+                             LinkedList<User> mUsersList) {
         mInflater = LayoutInflater.from(context);
-        this.usersList = usersList;
+        this.mUsersList = mUsersList;
 
         setHasStableIds(true);
     }
@@ -69,22 +64,29 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
 
     @Override
     public void onBindViewHolder(@NonNull FollowViewHolder holder, int position) {
-        User mImagePath = usersList.get(position);
-        //Uri uri = Uri.parse(mImagePath);
-        //holder.imageItemView.setImageURI(uri);
+        User mUser = mUsersList.get(0);
+        if (mUser.getAvatar() != null)
+            holder.avatarView.setImageBitmap(mUser.getAvatar());
+        holder.userIdView.setText("@" + mUser.getUserID());
+        holder.userNameView.setText(mUser.getUserName());
+
+        // User mUser = mUsersList.get(position);
+
     }
 
     public long getItemId(int position) {
-        return position;
+        return 0;
+        // return position;
     }
 
     @Override
     public int getItemCount() {
-        return usersList.size();
+        return 1;
+        // return mUsersList.size();
     }
 
     public void updateData(LinkedList<User> usersList) {
-        this.usersList = usersList;
+        this.mUsersList = usersList;
         notifyDataSetChanged();
     }
 }

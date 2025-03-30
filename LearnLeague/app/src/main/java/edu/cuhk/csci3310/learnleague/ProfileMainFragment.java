@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.text.Editable;
@@ -167,6 +168,16 @@ public class ProfileMainFragment extends Fragment {
                 String newEmail = s.toString();
                 User.getUser().updateEmail(newEmail);
             }
+        });
+
+        // Entries to see follow lists
+        TextView following = view.findViewById(R.id.following);
+        TextView followers = view.findViewById(R.id.followers);
+        following.setOnClickListener(v -> {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.profile_child_container, new FollowingFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
         return view;

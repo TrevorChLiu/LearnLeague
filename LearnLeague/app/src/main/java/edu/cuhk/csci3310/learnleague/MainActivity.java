@@ -18,8 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment coursesFragment = new CoursesFragment();
     private Fragment communityFragment = new CommunityFragment();
     private Fragment rankingFragment = new RankingFragment();
-
-    // Account owner
+    private Fragment profileFragment = new ProfileFragment();
 
 
     @Override
@@ -38,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_bar);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.profile) {
-                replaceFragment(new ProfileFragment());
+                //replaceFragment(new ProfileFragment());
+                replaceFragment(profileFragment);
             } else if (item.getItemId() == R.id.courses) {
                 replaceFragment(coursesFragment);
             } else if (item.getItemId() == R.id.community) {
