@@ -87,7 +87,7 @@ def update_user():
     
     cursor.execute("""
         UPDATE users 
-        SET hashed_password = %s, username = %s, email = %s, avatar = NULL 
+        SET hashed_password = %s, username = %s, email = %s
         WHERE user_id = %s
     """, (hashed_password, username, email, user_id))
     conx.commit()

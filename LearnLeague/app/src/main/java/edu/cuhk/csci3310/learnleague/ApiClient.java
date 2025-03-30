@@ -195,12 +195,7 @@ public class ApiClient {
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     User.setAvatar(bitmap);
                 } else {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response.body().string());
-                        Log.e("Failed to fetch user info from the server:", jsonResponse.getString("message"));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
+                        Log.d("Failed to fetch user info from the server:", "This might be due to user has no avatar");
                 }
             }
         });

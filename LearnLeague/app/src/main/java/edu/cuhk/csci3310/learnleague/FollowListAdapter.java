@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.LinkedList;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 
@@ -18,7 +19,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
     private LayoutInflater mInflater;
 
     private LinkedList<User> mUsersList;
-
+    private int fragmentContainerID;
     // the following pre-set res image path is for debugging, but good to let students to start with
 
     class FollowViewHolder extends RecyclerView.ViewHolder {
@@ -40,7 +41,11 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
 
             context = itemView.getContext();
             itemView.setOnClickListener(v -> {
-
+                User selectedUser = mUsersList.get((int) getItemId());
+                    FragmentTransaction transaction = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container_following_list, ProfileOtherFragment.newInstance(selectedUser, R.id.fragment_container_following_list));
+                    transaction.addToBackStack(null);
+                    transaction.commit();
             }
             );
 
@@ -51,6 +56,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
                              LinkedList<User> mUsersList) {
         mInflater = LayoutInflater.from(context);
         this.mUsersList = mUsersList;
+        //this.fragmentContainerID = fragmentContainerID;
 
         setHasStableIds(true);
     }
@@ -81,7 +87,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
 
     @Override
     public int getItemCount() {
-        return 1;
+        return 20;
         // return mUsersList.size();
     }
 

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.LinkedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -81,6 +82,12 @@ public class FollowingFragment extends Fragment {
         mAdapter.updateData(mUserList);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // Set on the listener for back button
+        Button backButton = view.findViewById(R.id.back_button);
+        backButton.setOnClickListener(v->{
+            getActivity().getSupportFragmentManager().popBackStack();
+        });
 
         return view;
     }

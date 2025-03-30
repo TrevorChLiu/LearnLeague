@@ -78,13 +78,14 @@ public class User {
     }
 
     public void updateAvatar(Bitmap newAvatar) {
+        if (newAvatar != null) {
+            avatar = newAvatar;
 
-        avatar = newAvatar;
-
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            ApiClient.updateAvatar(userID, newAvatar);
-        });
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                ApiClient.updateAvatar(userID, newAvatar);
+            });
+        }
     }
 
     private void updateUser() {
