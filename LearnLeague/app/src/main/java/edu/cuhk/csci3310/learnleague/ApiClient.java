@@ -214,9 +214,6 @@ public class ApiClient {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] avatarBytes = byteArrayOutputStream.toByteArray();
 
-        Log.e("Avatar Update", "Sending avatar to server. Size: " + avatarBytes.length + " bytes");
-        Log.e("Avatar Update bitmap", BitmapFactory.decodeByteArray(avatarBytes, 0, avatarBytes.length).getByteCount() + "");
-
         RequestBody body = RequestBody.create(MediaType.parse("image/jpg"), avatarBytes);
 
         Request request = new Request.Builder()

@@ -122,8 +122,7 @@ def get_user():
                 'username': user[2],
                 'email': user[3],
             }
-            print("Original: ", user[2])
-            print("Non Jsonify: ", user_info.get("username"))
+            
             return jsonify(user_info), 200
         else:
             return jsonify({
