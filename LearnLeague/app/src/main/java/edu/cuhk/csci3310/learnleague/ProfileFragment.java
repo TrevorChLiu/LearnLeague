@@ -181,7 +181,7 @@ public class ProfileFragment extends Fragment {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                Bitmap compressedImage = compressBitmapOnTheFly(selectedImage, 5);
+                Bitmap compressedImage = compressBitmapOnTheFly(selectedImage, 20);
                 ((ImageView)view.findViewById(R.id.avatar)).setImageBitmap(compressedImage);
                 User.getUser().updateAvatar(compressedImage);
             } catch (FileNotFoundException e) {
