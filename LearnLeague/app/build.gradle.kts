@@ -37,6 +37,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
     implementation(libs.androidx.appcompat)
     // for fragment
     val fragment_version = "1.8.6"

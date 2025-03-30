@@ -192,8 +192,6 @@ def get_avatar(user_id):
         conx.close()
 
 
-
-
 @app.route('/update_avatar/<user_id>', methods=['PUT'])
 def update_avatar(user_id):
     try:

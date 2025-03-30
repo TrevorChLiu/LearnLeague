@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -220,9 +221,15 @@ public class ProfileMainFragment extends Fragment {
         email.setText(owner.getUserEmail());
         following.setText(owner.getNumFollowing() + " Following");
         followers.setText(owner.getNumFollowers() + " Followers");
+        /*
         if (owner.getAvatar() != null) {
             avatar.setImageBitmap(owner.getAvatar());
-        }
+        }*/
+        Glide.with(getActivity())
+                .load("http://192.168.31.41:5000/get_avatar/" + User.getUser().getUserID())
+                .placeholder(R.drawable.default_avatar)
+                .into(avatar);
+
     }
 
 }

@@ -174,7 +174,7 @@ public class ApiClient {
             }
         });
     }
-
+/*
     public static void getAvatar(String userID) {
         OkHttpClient client = new OkHttpClient();
 
@@ -200,6 +200,8 @@ public class ApiClient {
             }
         });
     }
+
+ */
 
     public static void updateAvatar(String userID, Bitmap bitmap) {
         OkHttpClient client = new OkHttpClient();

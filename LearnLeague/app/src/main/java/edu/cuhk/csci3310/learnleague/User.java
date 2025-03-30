@@ -120,9 +120,11 @@ public class User {
         return hashedPassword;
     }
 
+    /*
     public Bitmap getAvatar() {
         return avatar;
     }
+    */
 
 }
 
