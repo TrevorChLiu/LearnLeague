@@ -8,6 +8,9 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class User {
     private String userID;
@@ -47,7 +50,10 @@ public class User {
         user = new User();
         user.userID = userID;
 
-        ApiClient.getUser(userID);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.getUser(userID);
+        });
     }
 
 
@@ -74,11 +80,19 @@ public class User {
     public void updateAvatar(Bitmap newAvatar) {
 
         avatar = newAvatar;
-        ApiClient.updateAvatar(userID, newAvatar);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.updateAvatar(userID, newAvatar);
+        });
     }
 
     private void updateUser() {
-        ApiClient.updateUser(this);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.updateUser(this);
+        });
+
     }
 
     public int getNumFollowing() {
