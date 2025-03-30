@@ -181,7 +181,7 @@ public class ProfileFragment extends Fragment {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                Bitmap compressedImage = compressBitmapOnTheFly(selectedImage, 10);
+                Bitmap compressedImage = compressBitmapOnTheFly(selectedImage, 5);
                 ((ImageView)view.findViewById(R.id.avatar)).setImageBitmap(compressedImage);
                 User.getUser().updateAvatar(compressedImage);
             } catch (FileNotFoundException e) {
@@ -215,6 +215,12 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * Compress the bitmap image
+     * @param bitmap The image
+     * @param quality How much quality do you want
+     * @return A compressed bitmap image
+     */
     public static Bitmap compressBitmapOnTheFly(Bitmap bitmap, int quality) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);

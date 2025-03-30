@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize account user
         User.initUser("Trev");
+
+        ApiClient.getAvatar("Trev");
     }
 
     /**

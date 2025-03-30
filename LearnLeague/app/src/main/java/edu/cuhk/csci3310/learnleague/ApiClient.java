@@ -10,15 +10,17 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Used for communicating with remote database
  */
 public class ApiClient {
     // remote server's address
-    private static final String BASE_URL = "http://10.0.2.2:5000";
+    private static final String BASE_URL = "http://192.168.31.41:5000";
 
     /**
      * Initialize the database
@@ -92,7 +94,6 @@ public class ApiClient {
             json.put("hashedpassword", user.getHashedPassword());
             json.put("username", user.getUserName());
             json.put("email", user.getUserEmail());
-            json.put("avatar", encodeBitmapToBase64(user.getAvatar()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,6 +175,76 @@ public class ApiClient {
         });
     }
 
+    public static void getAvatar(String userID) {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/get_avatar/" + userID)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    InputStream inputStream = response.body().byteStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    User.setAvatar(bitmap);
+                } else {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().string());
+                        Log.e("Failed to fetch user info from the server:", jsonResponse.getString("message"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+    }
+
+    public static void updateAvatar(String userID, Bitmap bitmap) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Convert the Bitmap to a byte array (PNG format)
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] avatarBytes = byteArrayOutputStream.toByteArray();
+
+        Log.e("Avatar Update", "Sending avatar to server. Size: " + avatarBytes.length + " bytes");
+        Log.e("Avatar Update bitmap", BitmapFactory.decodeByteArray(avatarBytes, 0, avatarBytes.length).getByteCount() + "");
+
+        RequestBody body = RequestBody.create(MediaType.parse("image/jpg"), avatarBytes);
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/update_avatar/" + userID)
+                .put(body)  // Sending the raw byte array directly
+                .build();
+
+        // Make the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("Avatar Update", "Avatar updated successfully");
+                } else {
+                    Log.e("Avatar Update", "Failed to update avatar: " + response.message());
+                }
+            }
+        });
+    }
+
+
+
+
     /**
      * Decode base64 string from json response to bitmap.
      * @param base64String the encoded string.
@@ -195,6 +266,5 @@ public class ApiClient {
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
-
 }
 

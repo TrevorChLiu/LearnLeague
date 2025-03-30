@@ -1,7 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import mysql.connector
 import sys
 import base64
+from io import BytesIO
+import imghdr
 
 app = Flask(__name__)
 
@@ -79,33 +81,22 @@ def update_user():
     hashed_password = data.get("hashedpassword")
     username = data.get("username")
     email = data.get("email")
-    avatar = data.get("avatar")
 
     conx = get_db_connection()
     cursor = conx.cursor()
-    try:
-        if avatar is None:  # If no avatar is provided (None sent from the client)
-            cursor.execute("""
-                UPDATE users 
-                SET hashed_password = %s, username = %s, email = %s, avatar = NULL 
-                WHERE user_id = %s
-            """, (hashed_password, username, email, user_id))
-        else:
-            print("original: ", len(avatar))
-            print("original bytes:", len(base64.b64decode(avatar)))
-            cursor.execute("""
-                UPDATE users 
-                SET hashed_password = %s, username = %s, email = %s, avatar = %s 
-                WHERE user_id = %s
-            """, (hashed_password, username, email, base64.b64decode(avatar), user_id))
-        conx.commit()
-        rows_affected = cursor.rowcount
-        return f"User information updated, {rows_affected} rows are affected."
-    except mysql.connector.Error as err:
-        return "Failed to update user: " + str(err)
-    finally:
-        cursor.close()
-        conx.close()
+    
+    cursor.execute("""
+        UPDATE users 
+        SET hashed_password = %s, username = %s, email = %s, avatar = NULL 
+        WHERE user_id = %s
+    """, (hashed_password, username, email, user_id))
+    conx.commit()
+    rows_affected = cursor.rowcount
+    cursor.close()
+    conx.close()
+    return f"User information updated, {rows_affected} rows are affected."    
+
+    
 
 # Obtain a user's information
 @app.route('/get_user', methods=['POST'])
@@ -117,16 +108,14 @@ def get_user():
     cursor = conx.cursor()
     try:
         cursor.execute("""
-            SELECT user_id, hashed_password, username, email, avatar
+            SELECT user_id, hashed_password, username, email
             FROM users
             WHERE user_id = %s
         """, (user_id,))
         
-        user = cursor.fetchone()[:4]
+        user = cursor.fetchone()
 
         if user:
-
-
             user_info = {
                 'userid': user[0],
                 'hashedpassword': user[1],
@@ -178,6 +167,68 @@ def drop_all_tables():
     finally:
         cursor.close()
         conx.close()
+
+
+
+@app.route('/get_avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    conx = get_db_connection()
+    cursor = conx.cursor()
+    try:
+        cursor.execute("""SELECT avatar FROM users WHERE user_id = %s""", (user_id,))
+        user = cursor.fetchone()
+        if user and user[0]:
+            image_type = imghdr.what(None, user[0])
+            if not image_type:
+                return jsonify({'message': 'Unsupported image format'}), 600
+            
+            return send_file(BytesIO(user[0]), mimetype=f'image/{image_type}', as_attachment=False)
+            
+        else:
+            return "Avatar not found!", 404
+    except mysql.connector.Error as err:
+        return 'Failed to retrieve avatar!', 500
+    finally:
+        cursor.close()
+        conx.close()
+
+
+
+
+@app.route('/update_avatar/<user_id>', methods=['PUT'])
+def update_avatar(user_id):
+    try:
+        # Get the raw binary data from the request body
+        avatar_data = request.data  # Receives the bytes directly
+
+        if not avatar_data:
+            return jsonify({'message': 'Avatar not provided!'}), 400
+
+        # Update the avatar in the database
+        conx = get_db_connection()
+        cursor = conx.cursor()
+
+        cursor.execute("""
+            UPDATE users 
+            SET avatar = %s 
+            WHERE user_id = %s
+        """, (avatar_data, user_id))
+
+        conx.commit()
+        rows_affected = cursor.rowcount
+
+        cursor.close()
+        conx.close()
+
+        if rows_affected > 0:
+            return jsonify({'message': 'Avatar updated successfully'}), 200
+        else:
+            return jsonify({'message': 'User not found'}), 404
+
+    except Exception as e:
+        return jsonify({'message': f'Error updating avatar: {str(e)}'}), 500
+
+
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

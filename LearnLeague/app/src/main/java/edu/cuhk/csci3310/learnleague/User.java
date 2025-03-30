@@ -35,6 +35,10 @@ public class User {
         User.user.userEmail = userEmail;
     }
 
+    public static void setAvatar(Bitmap avatar) {
+        User.user.avatar = avatar;
+    }
+
     public static User getUser() {
         return user;
     }
@@ -70,7 +74,7 @@ public class User {
     public void updateAvatar(Bitmap newAvatar) {
 
         avatar = newAvatar;
-        updateUser();
+        ApiClient.updateAvatar(userID, newAvatar);
     }
 
     private void updateUser() {
