@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.appcompat)
     // for fragment
     val fragment_version = "1.8.6"
     implementation("androidx.fragment:fragment:$fragment_version")
