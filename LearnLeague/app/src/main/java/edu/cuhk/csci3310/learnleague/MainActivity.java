@@ -54,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize account user
         // User.createUser("Trev", "TrevPassword");
 
-
-            User.initUser("Bob");
+        User.initUser("Trev");
 
 
     }

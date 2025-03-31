@@ -21,13 +21,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.tabs.TabLayout;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -122,7 +120,7 @@ public class ProfileMainFragment extends Fragment {
 
 
         // Show the profile owner's personal information
-        updateProfileView(view, User.getUser());
+        updateProfileView(view, User.getCurrentUser());
 
         // Allow change avatar
         ImageView avatar = view.findViewById(R.id.avatar);
@@ -150,7 +148,7 @@ public class ProfileMainFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String newUsername = s.toString();
-                User.getUser().updateUserName(newUsername);
+                User.getCurrentUser().updateUserName(newUsername);
             }
         });
 
@@ -168,7 +166,7 @@ public class ProfileMainFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String newEmail = s.toString();
-                User.getUser().updateEmail(newEmail);
+                User.getCurrentUser().updateEmail(newEmail);
             }
         });
 
@@ -195,7 +193,7 @@ public class ProfileMainFragment extends Fragment {
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 Bitmap compressedImage = Compressor.compressBitmap(selectedImage, 20);
                 ((ImageView)view.findViewById(R.id.avatar)).setImageBitmap(compressedImage);
-                User.getUser().updateAvatar(compressedImage);
+                User.getCurrentUser().updateAvatar(compressedImage);
             } catch (FileNotFoundException e) {
                 Log.e("Image saver", "Can't find the image");
             }
@@ -227,9 +225,9 @@ public class ProfileMainFragment extends Fragment {
             avatar.setImageBitmap(owner.getAvatar());
         }*/
         Glide.with(getActivity())
-                .load("http://192.168.31.41:5000/get_avatar/" + User.getUser().getUserID())
+                .load("http://192.168.31.41:5000/get_avatar/" + User.getCurrentUser().getUserID())
                 .placeholder(R.drawable.default_avatar)
-                .signature(new ObjectKey(User.getUser().getAvatarVersion()))
+                .signature(new ObjectKey(User.getCurrentUser().getAvatarVersion()))
                 .into(avatar);
 
     }

@@ -26,6 +26,7 @@ def initialize_db():
     responses = []
 
     responses.append(check_table_user(conx, cursor))
+    responses.append(check_table_follows(conx, cursor))
     
     cursor.close()
     conx.close()
@@ -54,7 +55,7 @@ def check_table_user(conx, cursor):
         response = "Table 'users' exists."
     return response
 
-def check_table_follow(conx, cursor):
+def check_table_follows(conx, cursor):
     # Check table existence
     cursor.execute("SHOW TABLES LIKE 'follows'")
     
@@ -158,6 +159,33 @@ def get_user():
         cursor.close()
         conx.close()
 
+@app.route('/update_follow', methods=['POST'])
+def udpate_follow():
+    data = request.json
+    follower_id = data.get("followerid")
+    followee_id = data.get("followeeid")
+    method = data.get("method")
+
+    conx = get_db_connection()
+    cursor = conx.cursor()
+
+    try:
+        if method == "follow":
+            cursor.execute("INSERT INTO follows (follower_id, followee_id) VALUES (%s, %s)", 
+                        (follower_id, followee_id))
+            conx.commit()
+            return follower_id + " is now a follower of " + followee_id
+        elif method == "unfollow":
+            cursor.execute("DELETE FROM follows WHERE follower_id = %s AND followee_id = %s", (follower_id, followee_id))
+            conx.commit()
+            return follower_id + " has now unfollowed " + followee_id
+        else:
+            return "No method called " + method
+    except mysql.connector.Error as err:
+        return "Failed to udpate follows: " + str(err)
+    finally:
+        cursor.close()
+        conx.close()
 
 # Drop all tables from the db
 def drop_all_tables():
@@ -185,30 +213,6 @@ def drop_all_tables():
     except mysql.connector.Error as err:
         print("Fail to drop tables:", err)
 
-    finally:
-        cursor.close()
-        conx.close()
-
-
-
-@app.route('/get_avatar/<user_id>', methods=['GET'])
-def get_avatar(user_id):
-    conx = get_db_connection()
-    cursor = conx.cursor()
-    try:
-        cursor.execute("""SELECT avatar FROM users WHERE user_id = %s""", (user_id,))
-        user = cursor.fetchone()
-        if user and user[0]:
-            image_type = imghdr.what(None, user[0])
-            if not image_type:
-                return jsonify({'message': 'Unsupported image format'}), 600
-            
-            return send_file(BytesIO(user[0]), mimetype=f'image/{image_type}', as_attachment=False)
-            
-        else:
-            return "Avatar not found!", 404
-    except mysql.connector.Error as err:
-        return 'Failed to retrieve avatar!', 500
     finally:
         cursor.close()
         conx.close()
@@ -247,16 +251,55 @@ def update_avatar(user_id):
     except Exception as e:
         return jsonify({'message': f'Error updating avatar: {str(e)}'}), 500
 
+@app.route('/get_follows_list', methods=['POST'])
+def get_follows_list():
+    data = request.json
+    user_id = data.get("userid")
+    method = data.get("method")
+
+    conx = get_db_connection()
+    cursor = conx.cursor()
+    try:
+        if method == "follower":
+            cursor.execute("""
+                SELECT user_id, hashed_password, username, email, avatar_version
+                FROM follows
+                JOIN users
+                ON follower_id = user_id
+                WHERE followee_id = %s
+            """, (user_id,))
+            followers = cursor.fetchall()
+            return jsonify(followers), 200
+        elif method == "followee":
+            cursor.execute("""
+                SELECT user_id, hashed_password, username, email, avatar_version
+                FROM follows
+                JOIN users
+                ON followee_id = user_id
+                WHERE follower_id = %s
+            """, (user_id,))
+            
+            followees = cursor.fetchall()
+            print(followees)
+            return jsonify(followees), 200
+        else:
+            return "get_follow_list: undefined method: " + method, 500
+    except mysql.connector.Error as err:
+        return "500: Failed to read user!", 500
+    finally:
+        cursor.close()
+        conx.close()
 
 
-def sha256_hash(password: str) -> str:
+
+def sha256_hash(password):
     hashed_bytes = hashlib.sha256(password.encode("utf-8")).digest()
     return hashed_bytes.hex()  
 
 from PIL import Image
 from io import BytesIO
 
-def compress_image(image_data: bytes, quality=20) -> bytearray:
+def compress_image(image_data, quality=20):
     try:
         img = Image.open(BytesIO(image_data))
 

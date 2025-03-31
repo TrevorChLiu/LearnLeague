@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.LinkedList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RankingFragment#newInstance} factory method to
@@ -66,16 +68,25 @@ public class RankingFragment extends Fragment {
         // Set up the button click listener
         Button myButton = view.findViewById(R.id.myButton);
         myButton.setOnClickListener(v -> {
-            User.createUser("Trev", "TrevPassword");
+            //User.createUser("Trev", "TrevPassword");
             /*
-            User.getUser().updateUserName("Steve");
-            User.getUser().updateEmail("4566@gmail.com");
-
+            User.getCurrentUser().updateUserName("Steve");
+            User.getCurrentUser().updateEmail("4566@gmail.com");
              */
+            /*User.userFollow("Trev", "Fiona");
+            User.userFollow("Trev", "Bob");
+            User.userFollow("Alan", "Bob");
+            User.userFollow("Fiona", "Trev");
+            User.userFollow("Fiona", "Somebody");
+            User.userUnfollow("Fiona", "Somebody");*/
+
+            ApiClient.getFollowsList("Trev", new LinkedList<>(), "followee");
         });
 
         return view;
     }
+
+
 
 
 }

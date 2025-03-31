@@ -74,7 +74,7 @@ public class FollowingFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recyclerview);
 
         mUserList = new LinkedList<>();
-        mUserList.add(User.getUser());
+        mUserList.add(User.getCurrentUser());
         mAdapter = new FollowListAdapter(getActivity(), mUserList);
 
         // Connect the adapter with the RecyclerView.

@@ -7,9 +7,11 @@ import okhttp3.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
 
 /**
  * Used for communicating with remote database
@@ -131,7 +133,7 @@ public class ApiClient {
      * Setup a user given user id. This is asynchronous.
      * @param userID User id.
      */
-    public static void getUser(String userID) {
+    public static void getCurrentUser(String userID) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
 
@@ -164,7 +166,7 @@ public class ApiClient {
                     try {
                         JSONObject jsonResponse = new JSONObject(response.body().string());
 
-                        User.getUser().userSetup(
+                        User.getCurrentUser().userSetup(
                                 userID,
                                 jsonResponse.getString("hashedpassword"),
                                 jsonResponse.getString("username"),
@@ -185,6 +187,72 @@ public class ApiClient {
             }
         });
     }
+
+    public static void getFollowsList(String userID, LinkedList<User> followsList, String method) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("userid", userID);
+            json.put("method", method);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/get_follows_list")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String responseBody = response.body().string();
+                        JSONArray jsonResponse = new JSONArray(responseBody);
+
+                        for (int i = 0; i < jsonResponse.length(); i++) {
+                            JSONArray userArray = jsonResponse.getJSONArray(i);
+
+                            User user = new User(
+                                    userArray.getString(0),
+                                    userArray.getString(1),
+                                    userArray.getString(2),
+                                    userArray.getString(3),
+                                    userArray.getInt(4)
+                            );
+
+                            followsList.add(user);
+                        }
+                        for (User user: followsList)
+                            Log.d("User record from api", user.toString());
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().string());
+                        Log.e("Failed to fetch user info from the server:", jsonResponse.getString("message"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+    }
+
 
     public static void updateAvatar(String userID, Bitmap bitmap) {
         OkHttpClient client = new OkHttpClient();
@@ -215,6 +283,47 @@ public class ApiClient {
                 } else {
                     Log.e("Avatar Update", "Failed to update avatar: " + response.message());
                 }
+            }
+        });
+    }
+
+    /**
+     * Make the follower follows/unfollows the followee based on the method.
+     * @param followerID The one to follow another.
+     * @param followeeID The one to be followed.
+     * @param method Either "follow" or "unfollow"
+     */
+    public static void updateFollow(String followerID, String followeeID, String method) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("followerid", followerID);
+            json.put("followeeid", followeeID);
+            json.put("method", method);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/update_follow")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println(response.body().string());
             }
         });
     }

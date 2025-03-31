@@ -78,7 +78,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
             holder.avatarView.setImageBitmap(mUser.getAvatar());
          */
         Glide.with(context)
-                .load("http://192.168.31.41:5000/get_avatar/" + User.getUser().getUserID())
+                .load("http://192.168.31.41:5000/get_avatar/" + User.getCurrentUser().getUserID())
                 .placeholder(R.drawable.default_avatar)
                 .into(holder.avatarView);
         holder.userIdView.setText("@" + mUser.getUserID());

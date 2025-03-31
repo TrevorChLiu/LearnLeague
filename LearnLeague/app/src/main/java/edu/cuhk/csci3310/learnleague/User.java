@@ -1,12 +1,8 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
-import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.annotation.NonNull;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,11 +36,19 @@ public class User {
         User.user.avatarVersion = avatarVersion;
     }
 
+    public User(String userID, String hashedPassword, String userName, String userEmail, int avatarVersion) {
+        this.userID = userID;
+        this.hashedPassword = hashedPassword;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.avatarVersion = avatarVersion;
+    }
+
     /**
      * Return the user running this app
      * @return The user running this app
      */
-    public static User getUser() {
+    public static User getCurrentUser() {
         return user;
     }
 
@@ -54,10 +58,10 @@ public class User {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            ApiClient.getUser(userID);
+            ApiClient.getCurrentUser(userID);
 
             // Refresh the page when user data is loaded
-            listener.onUserLoaded(getUser());
+            listener.onUserLoaded(getCurrentUser());
         });
     }
 
@@ -67,8 +71,7 @@ public class User {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            ApiClient.getUser(userID);
-
+            ApiClient.getCurrentUser(userID);
         });
     }
 
@@ -81,12 +84,37 @@ public class User {
     }
 
     /**
+     * Let the user running this app unfollow another
+     * @param another The one to be unfollowed
+     */
+    public static void unfollow(User another) {
+        userUnfollow(user, another);
+    }
+
+    /**
      * Let one user follow another
      * @param follower The one to follow another
      * @param followee The one to be followed
      */
     public static void userFollow(User follower, User followee) {
+        ApiClient.updateFollow(follower.getUserID(), followee.getUserID(), "follow");
+    }
 
+    /**
+     * Let one user unfollow another
+     * @param follower The one to unfollow another
+     * @param followee The one to be unfollowed
+     */
+    public static void userUnfollow(User follower, User followee) {
+        ApiClient.updateFollow(follower.getUserID(), followee.getUserID(), "unfollow");
+    }
+
+    public static void userFollow(String follower_id, String followee_id) {
+        ApiClient.updateFollow(follower_id, followee_id, "follow");
+    }
+
+    public static void userUnfollow(String follower_id, String followee_id) {
+        ApiClient.updateFollow(follower_id, followee_id, "unfollow");
     }
 
     public static void createUser(String userID, String password) {
@@ -156,6 +184,10 @@ public class User {
         return avatarVersion;
     }
 
-
+    @NonNull
+    @Override
+    public String toString() {
+        return "@" + userID + ": " + userName + ", email: " + userEmail;
+    }
 }
 
