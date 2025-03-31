@@ -99,6 +99,9 @@ public class LoginFragment extends Fragment {
         // Success to login
         if (validateLogin(accountid.getText().toString(), password.getText().toString())) {
             startActivity(new Intent(getActivity(), MainActivity.class));
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
         } else {
             // Fail to login
 

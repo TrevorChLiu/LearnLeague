@@ -90,18 +90,17 @@ public class FollowingFragment extends Fragment {
 
             @Override
             public void onFollowsListLoaded(LinkedList<User> followsList) {
-                getActivity().runOnUiThread(() -> {
-                    // Don't load again if the data is not changed
-                    if (mAdapter != null) {
-                        if (!mUserList.equals(followsList)) {
-                            Log.d(mUserList.toString(), followsList.toString());
-                            Log.d("Following Fragment:", "Updated");
-                            mAdapter.updateData(followsList);
-                            mUserList.clear();
-                            mUserList.addAll(followsList);
+                if (getActivity() != null)
+                    getActivity().runOnUiThread(() -> {
+                        // Don't load again if the data is not changed
+                        if (mAdapter != null) {
+                            if (!mUserList.equals(followsList)) {
+                                mAdapter.updateData(followsList);
+                                mUserList.clear();
+                                mUserList.addAll(followsList);
+                            }
                         }
-                    }
-                });
+                    });
             }
         });
 
