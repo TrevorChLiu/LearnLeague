@@ -31,6 +31,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +67,7 @@ public class ProfileOtherFragment extends Fragment {
 
         fragment.setArguments(args);
         fragment.setCurrentUser(user);
+        user.loadFollowsList();
         fragment.setParentContainer(parentContainer);
         return fragment;
     }
@@ -80,8 +82,9 @@ public class ProfileOtherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
+
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_other, container, false);
 
         // Create the nav tab layout for this page
@@ -123,7 +126,15 @@ public class ProfileOtherFragment extends Fragment {
         TextView followers = view.findViewById(R.id.followers);
         following.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(parentContainer, new FollowingFragment(owner));
+            transaction.replace(parentContainer, new FollowingFragment(owner, new OnFollowsListLoadedListener() {
+                @Override
+                public void onFollowsListLoaded(LinkedList<User> followsList) {
+                    Log.d(followsList.toString(), owner.getFollowingList().toString());
+                    if (followsList.isEmpty())
+                        followsList.addAll(owner.getFollowingList());
+                }
+            }));
+            //transaction.replace(parentContainer, new FollowingFragment(owner));
             transaction.addToBackStack(null);
             transaction.commit();
         });

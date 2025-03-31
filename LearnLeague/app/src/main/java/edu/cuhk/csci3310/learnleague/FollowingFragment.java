@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import android.widget.Button;
 
 import java.util.LinkedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import android.util.Log;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +41,20 @@ public class FollowingFragment extends Fragment {
 
     public FollowingFragment(User owner) {
         this.owner = owner;
+    }
+
+    public void setmUserList(LinkedList<User> mUserList) {
+        this.mUserList.addAll(mUserList);
+    }
+    public FollowingFragment(User owner, OnFollowsListLoadedListener listener) {
+        this.owner = owner;
+        listener.onFollowsListLoaded(mUserList);
+    }
+
+    public FollowingFragment(User owner, LinkedList<User> mUserList) {
+        this.owner = owner;
+        // The user list might be clean
+        this.mUserList.addAll(mUserList);
     }
 
     /**
@@ -82,12 +96,7 @@ public class FollowingFragment extends Fragment {
         mAdapter = new FollowListAdapter(getActivity(), mUserList);
 
 
-        User.getFollowingList(owner.getUserID(), new OnDataLoadedListener() {
-            @Override
-            public void onUserLoaded(User user) {
-
-            }
-
+        User.getFollowingList(owner.getUserID(), new OnFollowsListLoadedListener() {
             @Override
             public void onFollowsListLoaded(LinkedList<User> followsList) {
                 if (getActivity() != null)

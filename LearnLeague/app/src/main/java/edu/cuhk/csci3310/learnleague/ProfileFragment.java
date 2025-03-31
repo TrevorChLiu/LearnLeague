@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,5 +78,12 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Clean the stack when switching to other sections.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
 }

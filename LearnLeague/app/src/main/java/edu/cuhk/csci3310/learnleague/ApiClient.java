@@ -188,7 +188,13 @@ public class ApiClient {
         });
     }
 
-    public static void getFollowsList(String userID, String method, OnDataLoadedListener listener) {
+    /**
+     * Retrieve a follows list base on the method
+     * @param userID The user id
+     * @param method Either "followee" or "follower"
+     * @param listener What to do after getting the list
+     */
+    public static void getFollowsList(String userID, String method, OnFollowsListLoadedListener listener) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
         LinkedList<User> followsList = new LinkedList<>();
@@ -237,9 +243,9 @@ public class ApiClient {
 
                             followsList.add(user);
                         }
-                        listener.onFollowsListLoaded(followsList);
-                        for (User user: followsList)
-                            Log.d("User record from api", user.toString());
+                        if (listener != null)
+                            listener.onFollowsListLoaded(followsList);
+
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }

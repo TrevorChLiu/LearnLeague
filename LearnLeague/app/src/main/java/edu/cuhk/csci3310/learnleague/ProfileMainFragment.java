@@ -170,12 +170,15 @@ public class ProfileMainFragment extends Fragment {
             }
         });
 
+
+
         // Entries to see follow lists
         TextView following = view.findViewById(R.id.following);
         TextView followers = view.findViewById(R.id.followers);
         following.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.profile_child_container, new FollowingFragment(User.getCurrentUser()));
+            transaction.replace(R.id.profile_child_container, new FollowingFragment(User.getCurrentUser(), User.getCurrentUser().getFollowingList()));
+            //transaction.replace(R.id.profile_child_container, new FollowingFragment(User.getCurrentUser()));
             transaction.addToBackStack(null);
             transaction.commit();
         });

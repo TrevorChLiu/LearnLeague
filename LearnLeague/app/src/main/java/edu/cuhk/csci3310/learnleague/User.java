@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,12 @@ public class User {
     private int numFollowing;
 
     private static User user;
+
+    private LinkedList<User> followingList;
+
+    public LinkedList<User> getFollowingList() {
+        return followingList;
+    }
 
     /**
      * A helper class only be called by another Constructor
@@ -54,42 +61,47 @@ public class User {
         return user;
     }
 
-    public static void getFollowingList(String userID,  OnDataLoadedListener listener) {
+    public static void getFollowingList(String userID,  OnFollowsListLoadedListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             ApiClient.getFollowsList(userID, "followee", listener);
         });
     }
 
-    public static void getFollowerList(String userID, OnDataLoadedListener listener) {
+    public static void getFollowerList(String userID, OnFollowsListLoadedListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             ApiClient.getFollowsList(userID, "follower", listener);
         });
     }
 
-
-
-    public static void initUser(String userID, OnDataLoadedListener listener) {
-        user = new User();
-        user.userID = userID;
-
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            ApiClient.getCurrentUser(userID);
-
-            // Refresh the page when user data is loaded
-            listener.onUserLoaded(getCurrentUser());
-        });
+    public void setFollowingList(LinkedList<User> followingList) {
+        this.followingList.clear();
+        this.followingList.addAll(followingList);
     }
 
     public static void initUser(String userID) {
         user = new User();
         user.userID = userID;
 
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             ApiClient.getCurrentUser(userID);
+        });
+        user.loadFollowsList();
+    }
+
+    public void loadFollowsList() {
+        followingList = new LinkedList<>();
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        executor.execute(() -> {
+            ApiClient.getFollowsList(userID, "followee", new OnFollowsListLoadedListener() {
+                @Override
+                public void onFollowsListLoaded(LinkedList<User> followsList) {
+                    User.this.setFollowingList(followsList);
+                }
+            });
         });
     }
 
