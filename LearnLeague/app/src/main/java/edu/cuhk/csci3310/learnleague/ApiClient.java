@@ -99,6 +99,7 @@ public class ApiClient {
             json.put("hashedpassword", user.getHashedPassword());
             json.put("username", user.getUserName());
             json.put("email", user.getUserEmail());
+            json.put("avatarversion", user.getAvatarVersion());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,7 +168,8 @@ public class ApiClient {
                                 userID,
                                 jsonResponse.getString("hashedpassword"),
                                 jsonResponse.getString("username"),
-                                jsonResponse.getString("email")
+                                jsonResponse.getString("email"),
+                                jsonResponse.getInt("avatarversion")
                         );
                     } catch (JSONException e) {
                         throw new RuntimeException(e);

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -228,8 +229,14 @@ public class ProfileMainFragment extends Fragment {
         Glide.with(getActivity())
                 .load("http://192.168.31.41:5000/get_avatar/" + User.getUser().getUserID())
                 .placeholder(R.drawable.default_avatar)
+                .signature(new ObjectKey(User.getUser().getAvatarVersion()))
                 .into(avatar);
 
+    }
+
+    protected void updateProfileView(User user) {
+        if (view != null)
+            updateProfileView(view, user);
     }
 
 }

@@ -44,7 +44,8 @@ def check_table_user(conx, cursor):
             hashed_password CHAR(64) NOT NULL,
             username VARCHAR(20),
             email VARCHAR(45) DEFAULT '',
-            avatar BLOB
+            avatar MEDIUMBLOB,
+            avatar_version int DEFAULT 0
         )
         """)
         conx.commit()
@@ -100,15 +101,16 @@ def update_user():
     hashed_password = data.get("hashedpassword")
     username = data.get("username")
     email = data.get("email")
+    avatar_version = data.get("avatarversion")
 
     conx = get_db_connection()
     cursor = conx.cursor()
     
     cursor.execute("""
         UPDATE users 
-        SET hashed_password = %s, username = %s, email = %s
+        SET hashed_password = %s, username = %s, email = %s, avatar_version = %s
         WHERE user_id = %s
-    """, (hashed_password, username, email, user_id))
+    """, (hashed_password, username, email, avatar_version, user_id))
     conx.commit()
     rows_affected = cursor.rowcount
     cursor.close()
@@ -127,7 +129,7 @@ def get_user():
     cursor = conx.cursor()
     try:
         cursor.execute("""
-            SELECT user_id, hashed_password, username, email
+            SELECT user_id, hashed_password, username, email, avatar_version
             FROM users
             WHERE user_id = %s
         """, (user_id,))
@@ -140,6 +142,7 @@ def get_user():
                 'hashedpassword': user[1],
                 'username': user[2],
                 'email': user[3],
+                'avatarversion': user[4]
             }
             
             return jsonify(user_info), 200
@@ -246,15 +249,60 @@ def update_avatar(user_id):
 
 
 
-def hash_password(password: str) -> str:
+def sha256_hash(password: str) -> str:
     hashed_bytes = hashlib.sha256(password.encode("utf-8")).digest()
     return hashed_bytes.hex()  
 
+from PIL import Image
+from io import BytesIO
+
+def compress_image(image_data: bytes, quality=20) -> bytearray:
+    try:
+        img = Image.open(BytesIO(image_data))
+
+        buffer = BytesIO()
+        img.save(buffer, format=img.format, quality=quality)
+
+        return bytearray(buffer.getvalue())
+
+    except Exception as e:
+        print(f"Error compressing image: {e}")
+        return bytearray()
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         app.run(host="0.0.0.0", port=5000, debug=True)
-    elif "reset" in sys.argv:
-        drop_all_tables()
-    elif "demo" in sys.argv:
-        pass
+    else: 
+        if "reset" in sys.argv:
+            drop_all_tables()
+        if "demo" in sys.argv:
+            users = ["Alan", "Bob", "Charlie", "Delta", "Eve","Fiona", "Trev", "Somebody"]
+            idx = 100;
+
+            conx = get_db_connection()
+            cursor = conx.cursor()
+
+            initialize_db()
+
+            try:
+                for user in users:
+                    avatar_path = f"demo_images/{user}.jpg" 
+                    try:
+                        with open(avatar_path, "rb") as fp:
+                            avatar_byte = fp.read()
+                            # avatar_byte = compress_image(avatar_byte)
+                    except FileNotFoundError:
+                        avatar_byte = None  
+
+                    cursor.execute("INSERT INTO users (user_id, hashed_password, username, email, avatar) VALUES (%s, %s, %s, %s, %s)", 
+                                (user, user + "Password", user + str(idx), user + "@gmail.com", avatar_byte))
+                    
+                    conx.commit()
+                    print("Demo created")
+            except mysql.connector.Error as err:
+                print("Failed to create demo: " + str(err))
+            finally:
+                cursor.close()
+                conx.close()
+
+

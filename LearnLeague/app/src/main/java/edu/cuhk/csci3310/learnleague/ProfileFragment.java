@@ -24,7 +24,11 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ProfileMainFragment profileMainFragment;
 
+    public ProfileMainFragment getProfileMainFragment() {
+        return profileMainFragment;
+    }
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -67,7 +71,7 @@ public class ProfileFragment extends Fragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
 
 
-        ProfileMainFragment profileMainFragment = new ProfileMainFragment();
+        profileMainFragment = new ProfileMainFragment();
         fm.beginTransaction().replace(R.id.fragment_container, profileMainFragment).commit();
 
         return view;

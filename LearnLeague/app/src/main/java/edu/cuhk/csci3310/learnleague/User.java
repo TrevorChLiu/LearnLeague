@@ -17,6 +17,8 @@ public class User {
     private String userName;
     private String userEmail;
     private String hashedPassword;
+    // Used to control Glide's cache
+    private int avatarVersion;
 
     private int numFollowers;
     private int numFollowing;
@@ -30,11 +32,12 @@ public class User {
         // Simply do nothing
     }
 
-    protected void userSetup(String userID, String hashedPassword, String userName, String userEmail) {
+    protected void userSetup(String userID, String hashedPassword, String userName, String userEmail, int avatarVersion) {
         User.user.userID = userID;
         User.user.hashedPassword = hashedPassword;
         User.user.userName = userName;
         User.user.userEmail = userEmail;
+        User.user.avatarVersion = avatarVersion;
     }
 
     /**
@@ -45,6 +48,19 @@ public class User {
         return user;
     }
 
+    public static void initUser(String userID, onDataLoadedListener listener) {
+        user = new User();
+        user.userID = userID;
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.getUser(userID);
+
+            // Refresh the page when user data is loaded
+            listener.onUserLoaded(getUser());
+        });
+    }
+
     public static void initUser(String userID) {
         user = new User();
         user.userID = userID;
@@ -52,6 +68,7 @@ public class User {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             ApiClient.getUser(userID);
+
         });
     }
 
@@ -97,6 +114,8 @@ public class User {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 ApiClient.updateAvatar(userID, newAvatar);
+                avatarVersion++;
+                updateUser();
             });
         }
     }
@@ -133,6 +152,9 @@ public class User {
         return hashedPassword;
     }
 
+    public int getAvatarVersion() {
+        return avatarVersion;
+    }
 
 
 }

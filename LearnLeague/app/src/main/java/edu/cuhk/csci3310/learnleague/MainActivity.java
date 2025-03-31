@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.os.Bundle;
+import android.util.Log;
 
 
 import androidx.activity.EdgeToEdge;
@@ -51,9 +52,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Initialize account user
-        User.createUser("Trev", "TrevPassword");
+        // User.createUser("Trev", "TrevPassword");
 
-        // User.initUser("Trev");
+
+            User.initUser("Bob");
+
 
     }
 
