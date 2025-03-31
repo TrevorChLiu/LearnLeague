@@ -123,7 +123,7 @@ public class ProfileOtherFragment extends Fragment {
         TextView followers = view.findViewById(R.id.followers);
         following.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(parentContainer, new FollowingFragment());
+            transaction.replace(parentContainer, new FollowingFragment(owner));
             transaction.addToBackStack(null);
             transaction.commit();
         });

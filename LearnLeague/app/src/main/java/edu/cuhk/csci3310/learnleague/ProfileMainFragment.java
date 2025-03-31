@@ -175,7 +175,7 @@ public class ProfileMainFragment extends Fragment {
         TextView followers = view.findViewById(R.id.followers);
         following.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.profile_child_container, new FollowingFragment());
+            transaction.replace(R.id.profile_child_container, new FollowingFragment(User.getCurrentUser()));
             transaction.addToBackStack(null);
             transaction.commit();
         });

@@ -80,7 +80,7 @@ public class RankingFragment extends Fragment {
             User.userFollow("Fiona", "Somebody");
             User.userUnfollow("Fiona", "Somebody");*/
 
-            ApiClient.getFollowsList("Trev", new LinkedList<>(), "followee");
+            //ApiClient.getFollowsList("Trev", new LinkedList<>(), "followee");
         });
 
         return view;

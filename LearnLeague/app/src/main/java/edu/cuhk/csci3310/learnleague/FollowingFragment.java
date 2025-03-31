@@ -31,10 +31,15 @@ public class FollowingFragment extends Fragment {
     private String mParam2;
     private RecyclerView mRecyclerView;
     private FollowListAdapter mAdapter;
-    static LinkedList<User> mUserList = new LinkedList<>();
+    LinkedList<User> mUserList = new LinkedList<>();
+    User owner;
 
     public FollowingFragment() {
         // Required empty public constructor
+    }
+
+    public FollowingFragment(User owner) {
+        this.owner = owner;
     }
 
     /**
@@ -73,9 +78,23 @@ public class FollowingFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recyclerview);
 
-        mUserList = new LinkedList<>();
-        mUserList.add(User.getCurrentUser());
         mAdapter = new FollowListAdapter(getActivity(), mUserList);
+
+        User.getFollowingList(owner.getUserID(), mUserList, new OnDataLoadedListener() {
+            @Override
+            public void onUserLoaded(User user) {
+
+            }
+
+            @Override
+            public void onFollowsListLoaded(LinkedList<User> followsList) {
+                getActivity().runOnUiThread(() -> {
+                    if (mAdapter != null) {
+                        mAdapter.updateData(mUserList);
+                    }
+                });
+            }
+        });
 
         // Connect the adapter with the RecyclerView.
         mRecyclerView.setAdapter(mAdapter);

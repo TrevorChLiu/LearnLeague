@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 
+import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -52,7 +53,23 @@ public class User {
         return user;
     }
 
-    public static void initUser(String userID, onDataLoadedListener listener) {
+    public static void getFollowingList(String userID, LinkedList<User> followingList, OnDataLoadedListener listener) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.getFollowsList(userID, followingList, "followee", listener);
+        });
+    }
+
+    public static void getFollowerList(String userID, LinkedList<User> followerList, OnDataLoadedListener listener) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.getFollowsList(userID, followerList, "follower", listener);
+        });
+    }
+
+
+
+    public static void initUser(String userID, OnDataLoadedListener listener) {
         user = new User();
         user.userID = userID;
 

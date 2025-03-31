@@ -59,7 +59,6 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
                              LinkedList<User> mUsersList) {
         mInflater = LayoutInflater.from(context);
         this.mUsersList = mUsersList;
-        //this.fragmentContainerID = fragmentContainerID;
 
         setHasStableIds(true);
     }
@@ -73,11 +72,8 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
 
     @Override
     public void onBindViewHolder(@NonNull FollowViewHolder holder, int position) {
-        User mUser = mUsersList.get(0);
-        /*
-        if (mUser.getAvatar() != null)
-            holder.avatarView.setImageBitmap(mUser.getAvatar());
-         */
+        User mUser = mUsersList.get(position);
+
         Glide.with(context)
                 .load("http://192.168.31.41:5000/get_avatar/" + mUser.getUserID())
                 .placeholder(R.drawable.default_avatar)
@@ -86,19 +82,17 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
         holder.userIdView.setText("@" + mUser.getUserID());
         holder.userNameView.setText(mUser.getUserName());
 
-        // User mUser = mUsersList.get(position);
+
 
     }
 
     public long getItemId(int position) {
-        return 0;
-        // return position;
+        return position;
     }
 
     @Override
     public int getItemCount() {
-        return 20;
-        // return mUsersList.size();
+        return mUsersList.size();
     }
 
     public void updateData(LinkedList<User> usersList) {

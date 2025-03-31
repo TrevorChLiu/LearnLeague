@@ -188,7 +188,7 @@ public class ApiClient {
         });
     }
 
-    public static void getFollowsList(String userID, LinkedList<User> followsList, String method) {
+    public static void getFollowsList(String userID, LinkedList<User> followsList, String method, OnDataLoadedListener listener) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
 
@@ -236,6 +236,7 @@ public class ApiClient {
 
                             followsList.add(user);
                         }
+                        listener.onFollowsListLoaded(followsList);
                         for (User user: followsList)
                             Log.d("User record from api", user.toString());
                     } catch (JSONException e) {
