@@ -3,6 +3,7 @@ package edu.cuhk.csci3310.learnleague;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
@@ -53,17 +54,17 @@ public class User {
         return user;
     }
 
-    public static void getFollowingList(String userID, LinkedList<User> followingList, OnDataLoadedListener listener) {
+    public static void getFollowingList(String userID,  OnDataLoadedListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            ApiClient.getFollowsList(userID, followingList, "followee", listener);
+            ApiClient.getFollowsList(userID, "followee", listener);
         });
     }
 
-    public static void getFollowerList(String userID, LinkedList<User> followerList, OnDataLoadedListener listener) {
+    public static void getFollowerList(String userID, OnDataLoadedListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            ApiClient.getFollowsList(userID, followerList, "follower", listener);
+            ApiClient.getFollowsList(userID, "follower", listener);
         });
     }
 
@@ -206,5 +207,14 @@ public class User {
     public String toString() {
         return "@" + userID + ": " + userName + ", email: " + userEmail;
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User other = (User) obj;
+        return userID.equals(other.userID);
+    }
+
 }
 

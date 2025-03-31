@@ -188,9 +188,10 @@ public class ApiClient {
         });
     }
 
-    public static void getFollowsList(String userID, LinkedList<User> followsList, String method, OnDataLoadedListener listener) {
+    public static void getFollowsList(String userID, String method, OnDataLoadedListener listener) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
+        LinkedList<User> followsList = new LinkedList<>();
 
         try {
             json.put("userid", userID);

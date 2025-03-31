@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, send_file
 import mysql.connector
 import sys
-import base64
 from io import BytesIO
-import imghdr
+from PIL import Image
+from io import BytesIO
 import hashlib
+import imghdr
 
 app = Flask(__name__)
 
@@ -45,7 +46,7 @@ def check_table_user(conx, cursor):
             hashed_password CHAR(64) NOT NULL,
             username VARCHAR(20),
             email VARCHAR(45) DEFAULT '',
-            avatar MEDIUMBLOB,
+            avatar LONGBLOB,
             avatar_version int DEFAULT 0
         )
         """)
@@ -158,6 +159,29 @@ def get_user():
     finally:
         cursor.close()
         conx.close()
+
+@app.route('/get_avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    conx = get_db_connection()
+    cursor = conx.cursor()
+    try:
+        cursor.execute("""SELECT avatar FROM users WHERE user_id = %s""", (user_id,))
+        user = cursor.fetchone()
+        if user and user[0]:
+            image_type = imghdr.what(None, user[0])
+            if not image_type:
+                return jsonify({'message': 'Unsupported image format'}), 600
+            
+            return send_file(BytesIO(user[0]), mimetype=f'image/{image_type}', as_attachment=False)
+            
+        else:
+            return "Avatar not found!", 404
+    except mysql.connector.Error as err:
+        return 'Failed to retrieve avatar!', 500
+    finally:
+        cursor.close()
+        conx.close()
+
 
 @app.route('/update_follow', methods=['POST'])
 def udpate_follow():
@@ -296,8 +320,6 @@ def sha256_hash(password):
     hashed_bytes = hashlib.sha256(password.encode("utf-8")).digest()
     return hashed_bytes.hex()  
 
-from PIL import Image
-from io import BytesIO
 
 def compress_image(image_data, quality=20):
     try:
@@ -328,20 +350,26 @@ if __name__ == '__main__':
             initialize_db()
 
             try:
+                index = 0
                 for user in users:
                     avatar_path = f"demo_images/{user}.jpg" 
+                    
                     try:
                         with open(avatar_path, "rb") as fp:
                             avatar_byte = fp.read()
-                            # avatar_byte = compress_image(avatar_byte)
+                            avatar_byte = compress_image(avatar_byte)
                     except FileNotFoundError:
                         avatar_byte = None  
 
                     cursor.execute("INSERT INTO users (user_id, hashed_password, username, email, avatar) VALUES (%s, %s, %s, %s, %s)", 
                                 (user, user + "Password", user + str(idx), user + "@gmail.com", avatar_byte))
                     
-                    conx.commit()
-                    print("Demo created")
+                    for i in range(index + 1, len(users)):
+                        cursor.execute("INSERT INTO follows (follower_id, followee_id) VALUES (%s, %s)", (users[i], user))
+                    idx += 1
+                    index += 1;
+                conx.commit()
+                print("Demo created")
             except mysql.connector.Error as err:
                 print("Failed to create demo: " + str(err))
             finally:

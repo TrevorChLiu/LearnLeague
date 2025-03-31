@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import java.util.LinkedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
+import android.util.Log;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +31,7 @@ public class FollowingFragment extends Fragment {
     private String mParam2;
     private RecyclerView mRecyclerView;
     private FollowListAdapter mAdapter;
+    // Used to record the old following list
     LinkedList<User> mUserList = new LinkedList<>();
     User owner;
 
@@ -80,7 +81,8 @@ public class FollowingFragment extends Fragment {
 
         mAdapter = new FollowListAdapter(getActivity(), mUserList);
 
-        User.getFollowingList(owner.getUserID(), mUserList, new OnDataLoadedListener() {
+
+        User.getFollowingList(owner.getUserID(), new OnDataLoadedListener() {
             @Override
             public void onUserLoaded(User user) {
 
@@ -89,8 +91,15 @@ public class FollowingFragment extends Fragment {
             @Override
             public void onFollowsListLoaded(LinkedList<User> followsList) {
                 getActivity().runOnUiThread(() -> {
+                    // Don't load again if the data is not changed
                     if (mAdapter != null) {
-                        mAdapter.updateData(mUserList);
+                        if (!mUserList.equals(followsList)) {
+                            Log.d(mUserList.toString(), followsList.toString());
+                            Log.d("Following Fragment:", "Updated");
+                            mAdapter.updateData(followsList);
+                            mUserList.clear();
+                            mUserList.addAll(followsList);
+                        }
                     }
                 });
             }

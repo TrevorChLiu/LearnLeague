@@ -220,10 +220,7 @@ public class ProfileMainFragment extends Fragment {
         email.setText(owner.getUserEmail());
         following.setText(owner.getNumFollowing() + " Following");
         followers.setText(owner.getNumFollowers() + " Followers");
-        /*
-        if (owner.getAvatar() != null) {
-            avatar.setImageBitmap(owner.getAvatar());
-        }*/
+
         Glide.with(getActivity())
                 .load("http://192.168.31.41:5000/get_avatar/" + User.getCurrentUser().getUserID())
                 .placeholder(R.drawable.default_avatar)
