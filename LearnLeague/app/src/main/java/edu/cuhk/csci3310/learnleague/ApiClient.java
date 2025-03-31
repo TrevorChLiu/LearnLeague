@@ -1,8 +1,6 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.util.Log;
 
 import okhttp3.*;
@@ -10,10 +8,8 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Used for communicating with remote database
@@ -29,7 +25,7 @@ public class ApiClient {
         OkHttpClient client = new OkHttpClient();
 
         RequestBody body = RequestBody.create(
-                "".toString(),
+                "",
                 MediaType.get("application/json; charset=utf-8")
         );
 
@@ -51,7 +47,12 @@ public class ApiClient {
         });
     }
 
-    public static void createUser(String userID, int hashedPassword) {
+    /**
+     * Write the new user's info into database.
+     * @param userID New user's id.
+     * @param hashedPassword Hashed password of the new user.
+     */
+    public static void createUser(String userID, String hashedPassword) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
 
@@ -85,6 +86,10 @@ public class ApiClient {
         });
     }
 
+    /**
+     * Update all information of a user.
+     * @param user User item.
+     */
     public static void updateUser(User user) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
@@ -121,6 +126,10 @@ public class ApiClient {
         });
     }
 
+    /**
+     * Setup a user given user id. This is asynchronous.
+     * @param userID User id.
+     */
     public static void getUser(String userID) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
@@ -156,7 +165,7 @@ public class ApiClient {
 
                         User.getUser().userSetup(
                                 userID,
-                                jsonResponse.getInt("hashedpassword"),
+                                jsonResponse.getString("hashedpassword"),
                                 jsonResponse.getString("username"),
                                 jsonResponse.getString("email")
                         );
@@ -174,34 +183,6 @@ public class ApiClient {
             }
         });
     }
-/*
-    public static void getAvatar(String userID) {
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url(BASE_URL + "/get_avatar/" + userID)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    InputStream inputStream = response.body().byteStream();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    User.setAvatar(bitmap);
-                } else {
-                        Log.d("Failed to fetch user info from the server:", "This might be due to user has no avatar");
-                }
-            }
-        });
-    }
-
- */
 
     public static void updateAvatar(String userID, Bitmap bitmap) {
         OkHttpClient client = new OkHttpClient();

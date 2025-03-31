@@ -16,8 +16,7 @@ public class User {
     private String userID;
     private String userName;
     private String userEmail;
-    private int hashedPassword;
-    private Bitmap avatar;
+    private String hashedPassword;
 
     private int numFollowers;
     private int numFollowing;
@@ -31,17 +30,17 @@ public class User {
         // Simply do nothing
     }
 
-    protected void userSetup(String userID, int hashedPassword, String userName, String userEmail) {
+    protected void userSetup(String userID, String hashedPassword, String userName, String userEmail) {
         User.user.userID = userID;
         User.user.hashedPassword = hashedPassword;
         User.user.userName = userName;
         User.user.userEmail = userEmail;
     }
 
-    public static void setAvatar(Bitmap avatar) {
-        User.user.avatar = avatar;
-    }
-
+    /**
+     * Return the user running this app
+     * @return The user running this app
+     */
     public static User getUser() {
         return user;
     }
@@ -56,14 +55,29 @@ public class User {
         });
     }
 
+    /**
+     * Let the user running this app follow another
+     * @param another The one to be followed
+     */
+    public static void follow(User another) {
+        userFollow(user, another);
+    }
 
+    /**
+     * Let one user follow another
+     * @param follower The one to follow another
+     * @param followee The one to be followed
+     */
+    public static void userFollow(User follower, User followee) {
+
+    }
 
     public static void createUser(String userID, String password) {
-        ApiClient.createUser(userID, password.hashCode());
+        ApiClient.createUser(userID, Encryption.sha256Hash(password));
     }
 
     public void updatePassword(String password) {
-        hashedPassword = password.hashCode();
+        hashedPassword = Encryption.sha256Hash(password);
         updateUser();
     }
 
@@ -79,7 +93,6 @@ public class User {
 
     public void updateAvatar(Bitmap newAvatar) {
         if (newAvatar != null) {
-            avatar = newAvatar;
 
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
@@ -116,15 +129,11 @@ public class User {
         return userID;
     }
 
-    public int getHashedPassword() {
+    public String getHashedPassword() {
         return hashedPassword;
     }
 
-    /*
-    public Bitmap getAvatar() {
-        return avatar;
-    }
-    */
+
 
 }
 

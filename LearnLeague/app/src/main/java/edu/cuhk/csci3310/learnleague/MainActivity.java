@@ -51,11 +51,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Initialize account user
-        User.initUser("Trev");
+        User.createUser("Trev", "TrevPassword");
 
-        /*
-        ApiClient.getAvatar("Trev");
-         */
+        // User.initUser("Trev");
+
     }
 
     /**

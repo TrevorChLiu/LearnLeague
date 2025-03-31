@@ -4,6 +4,7 @@ import sys
 import base64
 from io import BytesIO
 import imghdr
+import hashlib
 
 app = Flask(__name__)
 
@@ -40,7 +41,7 @@ def check_table_user(conx, cursor):
         cursor.execute("""
         CREATE TABLE users (
             user_id VARCHAR(20) NOT NULL PRIMARY KEY,
-            hashed_password INT NOT NULL,
+            hashed_password CHAR(64) NOT NULL,
             username VARCHAR(20),
             email VARCHAR(45) DEFAULT '',
             avatar BLOB
@@ -52,6 +53,24 @@ def check_table_user(conx, cursor):
         response = "Table 'users' exists."
     return response
 
+def check_table_follow(conx, cursor):
+    # Check table existence
+    cursor.execute("SHOW TABLES LIKE 'follows'")
+    
+    # If the table doesn't exist, create it
+    if not cursor.fetchone():
+        cursor.execute("""
+        CREATE TABLE follows (
+            follower_id VARCHAR(20) NOT NULL,
+            followee_id VARCHAR(20) NOT NULL,
+            PRIMARY KEY (follower_id, followee_id)
+            )
+        """)
+        response = "Table 'follows' created."
+    else:
+        response = "Table 'follows' exists."
+    conx.commit()
+    return response
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
@@ -126,7 +145,7 @@ def get_user():
             return jsonify(user_info), 200
         else:
             return jsonify({
-                'message': "404: User Not Found!"
+                f'message': "404: User {user[0]} Not Found!"
             }), 404
     except mysql.connector.Error as err:
         return jsonify({
@@ -227,8 +246,15 @@ def update_avatar(user_id):
 
 
 
+def hash_password(password: str) -> str:
+    hashed_bytes = hashlib.sha256(password.encode("utf-8")).digest()
+    return hashed_bytes.hex()  
+
+
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         app.run(host="0.0.0.0", port=5000, debug=True)
     elif "reset" in sys.argv:
         drop_all_tables()
+    elif "demo" in sys.argv:
+        pass
