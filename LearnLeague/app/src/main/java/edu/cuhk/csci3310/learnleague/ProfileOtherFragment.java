@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -171,6 +172,7 @@ public class ProfileOtherFragment extends Fragment {
         Glide.with(getActivity())
                 .load("http://192.168.31.41:5000/get_avatar/" + owner.getUserID())
                 .placeholder(R.drawable.default_avatar)
+                .signature(new ObjectKey(owner.getAvatarVersion()))
                 .into(avatar);
     }
 }

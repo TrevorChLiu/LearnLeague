@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.FollowListAdapter.FollowViewHolder>  {
     private Context context;
@@ -78,8 +79,9 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
             holder.avatarView.setImageBitmap(mUser.getAvatar());
          */
         Glide.with(context)
-                .load("http://192.168.31.41:5000/get_avatar/" + User.getCurrentUser().getUserID())
+                .load("http://192.168.31.41:5000/get_avatar/" + mUser.getUserID())
                 .placeholder(R.drawable.default_avatar)
+                .signature(new ObjectKey(mUser.getAvatarVersion()))
                 .into(holder.avatarView);
         holder.userIdView.setText("@" + mUser.getUserID());
         holder.userNameView.setText(mUser.getUserName());
