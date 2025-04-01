@@ -171,7 +171,9 @@ public class ApiClient {
                                 jsonResponse.getString("hashedpassword"),
                                 jsonResponse.getString("username"),
                                 jsonResponse.getString("email"),
-                                jsonResponse.getLong("avatarversion")
+                                jsonResponse.getLong("avatarversion"),
+                                jsonResponse.getInt("numfollowee"),
+                                jsonResponse.getInt("numfollower")
                         );
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
@@ -238,7 +240,9 @@ public class ApiClient {
                                     userArray.getString(1),
                                     userArray.getString(2),
                                     userArray.getString(3),
-                                    userArray.getInt(4)
+                                    userArray.getLong(4),
+                                    userArray.getInt(5),
+                                    userArray.getInt(6)
                             );
 
                             followsList.add(user);

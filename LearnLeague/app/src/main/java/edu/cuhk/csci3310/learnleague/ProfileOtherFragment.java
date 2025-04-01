@@ -126,12 +126,25 @@ public class ProfileOtherFragment extends Fragment {
             transaction.replace(parentContainer, new FollowingFragment(owner, new OnFollowsListLoadedListener() {
                 @Override
                 public void onFollowsListLoaded(LinkedList<User> followsList) {
-                    Log.d(followsList.toString(), owner.getFollowingList().toString());
                     if (followsList.isEmpty())
                         followsList.addAll(owner.getFollowingList());
                 }
             }));
-            //transaction.replace(parentContainer, new FollowingFragment(owner));
+
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        followers.setOnClickListener(v -> {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(parentContainer, new FollowerFragment(owner, new OnFollowsListLoadedListener() {
+                @Override
+                public void onFollowsListLoaded(LinkedList<User> followsList) {
+                    if (followsList.isEmpty())
+                        followsList.addAll(owner.getFollowersList());
+                }
+            }));
+
             transaction.addToBackStack(null);
             transaction.commit();
         });
@@ -140,6 +153,20 @@ public class ProfileOtherFragment extends Fragment {
         Button backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(v->{
             getActivity().getSupportFragmentManager().popBackStack();
+        });
+
+        // Register follow button
+        Button followButton = view.findViewById(R.id.profile_follow_button);
+        String followButtonText = User.getCurrentUser().hasFollowed(owner) ? "Following" : "Follow";
+        followButton.setText(followButtonText);
+        followButton.setOnClickListener(v -> {
+            if (followButton.getText().toString().equals("Following")) {
+                followButton.setText("Follow");
+                User.getCurrentUser().unfollow(owner);  // Unfollow
+            } else {
+                followButton.setText("Following");
+                User.getCurrentUser().follow(owner);  // Follow
+            }
         });
 
         return view;

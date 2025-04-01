@@ -1,7 +1,6 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,17 +20,20 @@ public class User {
     // Used to control Glide's cache
     private long avatarVersion;
 
-    private int numFollowers;
-    private int numFollowing;
+    private int numFollowers = 0;
+    private int numFollowing = 0;
 
 
     private static User user;
 
     private LinkedList<User> followingList = new LinkedList<User>();
-    private LinkedList<User> followerList = new LinkedList<User>();
+    private LinkedList<User> followersList = new LinkedList<User>();
 
     public LinkedList<User> getFollowingList() {
         return followingList;
+    }
+    public LinkedList<User> getFollowersList() {
+        return followersList;
     }
 
     /**
@@ -50,20 +52,36 @@ public class User {
         return followingList.contains(other);
     }
 
-    protected void userSetup(String userID, String hashedPassword, String userName, String userEmail, long avatarVersion) {
+    /**
+     * Initialize the user of current account.
+     * @param userID User id of current account.
+     * @param hashedPassword Hashed password of current account.
+     * @param userName Current account name.
+     * @param userEmail Current account emial.
+     * @param avatarVersion Current account avatar updated time in long.
+     * @param numFollowing Number of users followed by current account.
+     * @param numFollowers Number of users following current account.
+     */
+    protected void userSetup(String userID, String hashedPassword, String userName, String userEmail,
+                             long avatarVersion, int numFollowing, int numFollowers) {
         User.user.userID = userID;
         User.user.hashedPassword = hashedPassword;
         User.user.userName = userName;
         User.user.userEmail = userEmail;
         User.user.avatarVersion = avatarVersion;
+        User.user.numFollowing = numFollowing;
+        User.user.numFollowers = numFollowers;
     }
 
-    public User(String userID, String hashedPassword, String userName, String userEmail, long avatarVersion) {
+    public User(String userID, String hashedPassword, String userName, String userEmail, long avatarVersion,
+                int numFollowing, int numFollowers) {
         this.userID = userID;
         this.hashedPassword = hashedPassword;
         this.userName = userName;
         this.userEmail = userEmail;
         this.avatarVersion = avatarVersion;
+        this.numFollowing = numFollowing;
+        this.numFollowers = numFollowers;
     }
 
     /**
@@ -81,7 +99,7 @@ public class User {
         });
     }
 
-    public static void getFollowerList(String userID, OnFollowsListLoadedListener listener) {
+    public static void getFollowersList(String userID, OnFollowsListLoadedListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             ApiClient.getFollowsList(userID, "follower", listener);
@@ -91,6 +109,11 @@ public class User {
     public void setFollowingList(LinkedList<User> followingList) {
         this.followingList.clear();
         this.followingList.addAll(followingList);
+    }
+
+    public void setFollowersList(LinkedList<User> followersList) {
+        this.followersList.clear();
+        this.followersList.addAll(followersList);
     }
 
     public static void initUser(String userID) {
@@ -105,14 +128,32 @@ public class User {
         user.loadFollowsList();
     }
 
+    public static void reloadCurrentUser() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.getCurrentUser(User.user.getUserID());
+        });
+    }
+
     public void loadFollowsList() {
         followingList = new LinkedList<>();
+        followersList = new LinkedList<>();
+
         ExecutorService executor = Executors.newFixedThreadPool(2);
         executor.execute(() -> {
             ApiClient.getFollowsList(userID, "followee", new OnFollowsListLoadedListener() {
                 @Override
                 public void onFollowsListLoaded(LinkedList<User> followsList) {
                     User.this.setFollowingList(followsList);
+                }
+            });
+        });
+
+        executor.execute(() -> {
+            ApiClient.getFollowsList(userID, "follower", new OnFollowsListLoadedListener() {
+                @Override
+                public void onFollowsListLoaded(LinkedList<User> followsList) {
+                    User.this.setFollowersList(followsList);
                 }
             });
         });
@@ -125,6 +166,7 @@ public class User {
     public static void follow(User another) {
         User.user.followingList.add(another);
         userFollow(user, another);
+        User.user.numFollowing++;
     }
 
     /**
@@ -135,6 +177,7 @@ public class User {
         if (User.user.followingList.contains(another))
             User.user.followingList.remove(another);
         userUnfollow(user, another);
+        User.user.numFollowing--;
     }
 
     /**

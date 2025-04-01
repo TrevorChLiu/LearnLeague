@@ -132,10 +132,18 @@ def get_user():
     cursor = conx.cursor()
     try:
         cursor.execute("""
-            SELECT user_id, hashed_password, username, email, avatar_version
-            FROM users
-            WHERE user_id = %s
-        """, (user_id,))
+            SELECT 
+                u.user_id, 
+                u.hashed_password, 
+                u.username, 
+                u.email, 
+                u.avatar_version,
+                (SELECT COUNT(*) FROM follows WHERE follower_id = u.user_id),
+                (SELECT COUNT(*) FROM follows WHERE followee_id = u.user_id)
+            FROM users u
+            WHERE u.user_id = %s
+""", (user_id,))
+
         
         user = cursor.fetchone()
 
@@ -145,7 +153,9 @@ def get_user():
                 'hashedpassword': user[1],
                 'username': user[2],
                 'email': user[3],
-                'avatarversion': user[4]
+                'avatarversion': user[4],
+                'numfollowee' : user[5],
+                'numfollower' : user[6]
             }
             
             return jsonify(user_info), 200
@@ -286,31 +296,45 @@ def get_follows_list():
     try:
         if method == "follower":
             cursor.execute("""
-                SELECT user_id, hashed_password, username, email, avatar_version
-                FROM follows
-                JOIN users
-                ON follower_id = user_id
-                WHERE followee_id = %s
-                ORDER BY add_time
+                SELECT 
+                    u.user_id, 
+                    u.hashed_password, 
+                    u.username, 
+                    u.email, 
+                    u.avatar_version,
+                    (SELECT COUNT(*) FROM follows WHERE follower_id = u.user_id) AS followee_count, 
+                    (SELECT COUNT(*) FROM follows WHERE followee_id = u.user_id) AS follower_count
+                FROM follows f
+                JOIN users u ON f.follower_id = u.user_id 
+                WHERE f.followee_id = %s
+                ORDER BY f.add_time
             """, (user_id,))
             followers = cursor.fetchall()
             return jsonify(followers), 200
         elif method == "followee":
             cursor.execute("""
-                SELECT user_id, hashed_password, username, email, avatar_version
-                FROM follows
-                JOIN users
-                ON followee_id = user_id
-                WHERE follower_id = %s
-                ORDER BY add_time
+                SELECT 
+                    u.user_id, 
+                    u.hashed_password, 
+                    u.username, 
+                    u.email, 
+                    u.avatar_version,   
+                    (SELECT COUNT(*) FROM follows WHERE follower_id = u.user_id) AS followee_count, 
+                    (SELECT COUNT(*) FROM follows WHERE followee_id = u.user_id) AS follower_count
+                FROM follows f
+                JOIN users u ON f.followee_id = u.user_id 
+                WHERE f.follower_id = %s
+                ORDER BY f.add_time
             """, (user_id,))
             
             followees = cursor.fetchall()
-            print(followees)
+            
             return jsonify(followees), 200
         else:
+            print("get_follow_list: undefined method: " + method)
             return "get_follow_list: undefined method: " + method, 500
     except mysql.connector.Error as err:
+        print("500: Failed to read user:", str(err))
         return "500: Failed to read user!", 500
     finally:
         cursor.close()
@@ -343,7 +367,7 @@ if __name__ == '__main__':
         if "reset" in sys.argv:
             drop_all_tables()
         if "demo" in sys.argv:
-            users = ["Alan", "Bob", "Charlie", "Delta", "Eve","Fiona", "Trev", "Somebody"]
+            users = ["Alan", "Bob", "Charlie", "Delta", "Eve","Fiona", "Trev", "Somebody", "Mia", "Hunter", "Lester"]
             idx = 100;
 
             conx = get_db_connection()

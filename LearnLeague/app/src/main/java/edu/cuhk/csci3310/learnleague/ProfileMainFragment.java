@@ -178,7 +178,13 @@ public class ProfileMainFragment extends Fragment {
         following.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.profile_child_container, new FollowingFragment(User.getCurrentUser(), User.getCurrentUser().getFollowingList()));
-            //transaction.replace(R.id.profile_child_container, new FollowingFragment(User.getCurrentUser()));
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        followers.setOnClickListener(v -> {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.profile_child_container, new FollowerFragment(User.getCurrentUser(), User.getCurrentUser().getFollowersList()));
             transaction.addToBackStack(null);
             transaction.commit();
         });
@@ -235,6 +241,12 @@ public class ProfileMainFragment extends Fragment {
     protected void updateProfileView(User user) {
         if (view != null)
             updateProfileView(view, user);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        User.reloadCurrentUser();
     }
 
 }

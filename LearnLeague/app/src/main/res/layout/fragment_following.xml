@@ -11,8 +11,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/very_dark_gray"
-    tools:context=".FollowingFragment">
+    android:background="@color/very_dark_gray">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
