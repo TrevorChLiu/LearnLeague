@@ -24,6 +24,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
 
     private LinkedList<User> mUsersList;
     private int fragmentContainerID;
+    private OnStopProfileOtherListener onStopProfileOtherListener;
 
     // the following pre-set res image path is for debugging, but good to let students to start with
 
@@ -53,7 +54,13 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
             itemView.setOnClickListener(v -> {
                 User selectedUser = mUsersList.get((int) getItemId());
                 FragmentTransaction transaction = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container_following_list, ProfileOtherFragment.newInstance(selectedUser, R.id.fragment_container_following_list));
+                transaction.replace(R.id.fragment_container_following_list, ProfileOtherFragment.newInstance(selectedUser, R.id.fragment_container_following_list,
+                        new OnStopProfileOtherListener() {
+                            @Override
+                            public void OnStop() {
+                                adapter.onStopProfileOtherListener.OnStop();
+                            }
+                        }));
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -64,9 +71,10 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
     }
 
     public FollowListAdapter(Context context,
-                             LinkedList<User> mUsersList) {
+                             LinkedList<User> mUsersList, OnStopProfileOtherListener onStopProfileOtherListener) {
         mInflater = LayoutInflater.from(context);
         this.mUsersList = mUsersList;
+        this.onStopProfileOtherListener = onStopProfileOtherListener;
 
         setHasStableIds(true);
     }

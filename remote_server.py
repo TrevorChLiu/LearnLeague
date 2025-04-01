@@ -291,7 +291,7 @@ def get_follows_list():
                 JOIN users
                 ON follower_id = user_id
                 WHERE followee_id = %s
-                ORDER BY add_time DESC
+                ORDER BY add_time
             """, (user_id,))
             followers = cursor.fetchall()
             return jsonify(followers), 200
@@ -302,10 +302,11 @@ def get_follows_list():
                 JOIN users
                 ON followee_id = user_id
                 WHERE follower_id = %s
-                ORDER BY add_time DESC
+                ORDER BY add_time
             """, (user_id,))
             
             followees = cursor.fetchall()
+            print(followees)
             return jsonify(followees), 200
         else:
             return "get_follow_list: undefined method: " + method, 500

@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        
+
         int backStackCount = getActivity().getSupportFragmentManager().getBackStackEntryCount();
         if (backStackCount > 0)
             getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

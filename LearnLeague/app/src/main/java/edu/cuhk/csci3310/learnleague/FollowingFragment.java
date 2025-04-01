@@ -51,11 +51,16 @@ public class FollowingFragment extends Fragment {
         listener.onFollowsListLoaded(mUserList);
     }
 
+
+
     public FollowingFragment(User owner, LinkedList<User> mUserList) {
         this.owner = owner;
         // The user list might be clean
         this.mUserList.addAll(mUserList);
+
     }
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -93,7 +98,28 @@ public class FollowingFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recyclerview);
 
-        mAdapter = new FollowListAdapter(getActivity(), mUserList);
+        mAdapter = new FollowListAdapter(getActivity(), mUserList, new OnStopProfileOtherListener() {
+            @Override
+            public void OnStop() {
+                Log.d("Following Fragment", "The onstop listener is called.");
+                User.getFollowingList(owner.getUserID(), new OnFollowsListLoadedListener() {
+                    @Override
+                    public void onFollowsListLoaded(LinkedList<User> followsList) {
+                        if (getActivity() != null)
+                            getActivity().runOnUiThread(() -> {
+                                // Don't load again if the data is not changed
+                                if (mAdapter != null) {
+                                    if (!mUserList.equals(followsList)) {
+                                        mAdapter.updateData(followsList);
+                                        mUserList.clear();
+                                        mUserList.addAll(followsList);
+                                    }
+                                }
+                            });
+                    }
+                });
+            }
+        });
 
         // Preload the following list in other's profile and use in if ready
         User.getFollowingList(owner.getUserID(), new OnFollowsListLoadedListener() {
@@ -127,5 +153,18 @@ public class FollowingFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            Log.d("FollowingFragment", "Fragment is hidden but still attached.");
+        }
     }
 }

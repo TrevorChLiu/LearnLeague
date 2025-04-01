@@ -1,36 +1,23 @@
 package edu.cuhk.csci3310.learnleague;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.tabs.TabLayout;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.LinkedList;
 
 /**
@@ -50,6 +37,7 @@ public class ProfileOtherFragment extends Fragment {
     private ViewPagerAdapter viewPagerAdapter;
     private View view;
     int parentContainer;
+    OnStopProfileOtherListener onStopListener = null;
 
     public ProfileOtherFragment() {
         // Required empty public constructor
@@ -61,13 +49,15 @@ public class ProfileOtherFragment extends Fragment {
      * @return A new instance of fragment ProfileOtherFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProfileOtherFragment newInstance(User user, int parentContainer) {
+    public static ProfileOtherFragment newInstance(User user, int parentContainer, OnStopProfileOtherListener listener) {
         ProfileOtherFragment fragment = new ProfileOtherFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
         fragment.setCurrentUser(user);
         user.loadFollowsList();
+        fragment.onStopListener = listener;
+
         fragment.setParentContainer(parentContainer);
         return fragment;
     }
@@ -77,6 +67,13 @@ public class ProfileOtherFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (onStopListener != null)
+            onStopListener.OnStop();
     }
 
     @Override
