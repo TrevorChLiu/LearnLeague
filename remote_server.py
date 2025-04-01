@@ -5,7 +5,6 @@ from io import BytesIO
 from PIL import Image
 from io import BytesIO
 import hashlib
-import imghdr
 
 app = Flask(__name__)
 
@@ -168,9 +167,8 @@ def get_avatar(user_id):
         cursor.execute("""SELECT avatar FROM users WHERE user_id = %s""", (user_id,))
         user = cursor.fetchone()
         if user and user[0]:
-            image_type = imghdr.what(None, user[0])
-            if not image_type:
-                return jsonify({'message': 'Unsupported image format'}), 600
+            image = Image.open(BytesIO(user[0]))
+            image_type = image.format.lower()
             
             return send_file(BytesIO(user[0]), mimetype=f'image/{image_type}', as_attachment=False)
             
@@ -304,7 +302,6 @@ def get_follows_list():
             """, (user_id,))
             
             followees = cursor.fetchall()
-            print(followees)
             return jsonify(followees), 200
         else:
             return "get_follow_list: undefined method: " + method, 500
