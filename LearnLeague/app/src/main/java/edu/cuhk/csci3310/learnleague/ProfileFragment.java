@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,8 +74,8 @@ public class ProfileFragment extends Fragment {
 
 
         profileMainFragment = new ProfileMainFragment();
-        fm.beginTransaction().replace(R.id.fragment_container, profileMainFragment).commit();
-
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.fragment_container, profileMainFragment).commit();
         return view;
     }
 
@@ -84,6 +85,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        
+        int backStackCount = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackCount > 0)
+            getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }

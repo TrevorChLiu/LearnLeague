@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.sql.Timestamp;
+
 
 
 public class User {
@@ -17,14 +19,16 @@ public class User {
     private String userEmail;
     private String hashedPassword;
     // Used to control Glide's cache
-    private int avatarVersion;
+    private long avatarVersion;
 
     private int numFollowers;
     private int numFollowing;
 
+
     private static User user;
 
-    private LinkedList<User> followingList;
+    private LinkedList<User> followingList = new LinkedList<User>();
+    private LinkedList<User> followerList = new LinkedList<User>();
 
     public LinkedList<User> getFollowingList() {
         return followingList;
@@ -37,7 +41,16 @@ public class User {
         // Simply do nothing
     }
 
-    protected void userSetup(String userID, String hashedPassword, String userName, String userEmail, int avatarVersion) {
+    /**
+     * Return true if the other user is followed by current user
+     * @param other other user
+     * @return other user is followed by current user or not
+     */
+    public boolean hasFollowed(User other) {
+        return followingList.contains(other);
+    }
+
+    protected void userSetup(String userID, String hashedPassword, String userName, String userEmail, long avatarVersion) {
         User.user.userID = userID;
         User.user.hashedPassword = hashedPassword;
         User.user.userName = userName;
@@ -45,7 +58,7 @@ public class User {
         User.user.avatarVersion = avatarVersion;
     }
 
-    public User(String userID, String hashedPassword, String userName, String userEmail, int avatarVersion) {
+    public User(String userID, String hashedPassword, String userName, String userEmail, long avatarVersion) {
         this.userID = userID;
         this.hashedPassword = hashedPassword;
         this.userName = userName;
@@ -110,6 +123,7 @@ public class User {
      * @param another The one to be followed
      */
     public static void follow(User another) {
+        User.user.followingList.add(another);
         userFollow(user, another);
     }
 
@@ -118,6 +132,8 @@ public class User {
      * @param another The one to be unfollowed
      */
     public static void unfollow(User another) {
+        if (User.user.followingList.contains(another))
+            User.user.followingList.remove(another);
         userUnfollow(user, another);
     }
 
@@ -172,7 +188,7 @@ public class User {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 ApiClient.updateAvatar(userID, newAvatar);
-                avatarVersion++;
+                avatarVersion = new Timestamp(System.currentTimeMillis()).getTime();
                 updateUser();
             });
         }
@@ -210,7 +226,7 @@ public class User {
         return hashedPassword;
     }
 
-    public int getAvatarVersion() {
+    public long getAvatarVersion() {
         return avatarVersion;
     }
 

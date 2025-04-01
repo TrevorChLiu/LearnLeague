@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
 
     private LinkedList<User> mUsersList;
     private int fragmentContainerID;
+
     // the following pre-set res image path is for debugging, but good to let students to start with
 
     class FollowViewHolder extends RecyclerView.ViewHolder {
@@ -30,6 +32,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
         public ImageView avatarView;
         public TextView userNameView;
         public TextView userIdView;
+        public Button followButton;
 
         final edu.cuhk.csci3310.learnleague.FollowListAdapter mAdapter;
 
@@ -40,17 +43,22 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
             userNameView = itemView.findViewById(R.id.username);
             userIdView = itemView.findViewById(R.id.user_id);
             this.mAdapter = adapter;
+            followButton = itemView.findViewById(R.id.follow_list_button);
 
 
             context = itemView.getContext();
+
+
+            // Register for user item in follow list
             itemView.setOnClickListener(v -> {
                 User selectedUser = mUsersList.get((int) getItemId());
-                    FragmentTransaction transaction = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container_following_list, ProfileOtherFragment.newInstance(selectedUser, R.id.fragment_container_following_list));
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                FragmentTransaction transaction = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container_following_list, ProfileOtherFragment.newInstance(selectedUser, R.id.fragment_container_following_list));
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
             );
+
 
         }
     }
@@ -82,8 +90,18 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
         holder.userIdView.setText("@" + mUser.getUserID());
         holder.userNameView.setText(mUser.getUserName());
 
-
-
+        // Register follow button
+        String followButtonText = User.getCurrentUser().hasFollowed(mUser) ? "Following" : "Follow";
+        holder.followButton.setText(followButtonText);
+        holder.followButton.setOnClickListener(v -> {
+            if (holder.followButton.getText().toString().equals("Following")) {
+                holder.followButton.setText("Follow");
+                User.getCurrentUser().unfollow(mUser);  // Unfollow
+            } else {
+                holder.followButton.setText("Following");
+                User.getCurrentUser().follow(mUser);  // Follow
+            }
+        });
     }
 
     public long getItemId(int position) {

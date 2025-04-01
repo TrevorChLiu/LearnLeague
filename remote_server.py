@@ -5,6 +5,7 @@ from io import BytesIO
 from PIL import Image
 from io import BytesIO
 import hashlib
+import time
 
 app = Flask(__name__)
 
@@ -46,9 +47,9 @@ def check_table_user(conx, cursor):
             username VARCHAR(20),
             email VARCHAR(45) DEFAULT '',
             avatar LONGBLOB,
-            avatar_version int DEFAULT 0
+            avatar_version BIGINT DEFAULT %s
         )
-        """)
+        """, (int(time.time()),))
         conx.commit()
         response = "Table 'users' created."
     else:
@@ -65,8 +66,9 @@ def check_table_follows(conx, cursor):
         CREATE TABLE follows (
             follower_id VARCHAR(20) NOT NULL,
             followee_id VARCHAR(20) NOT NULL,
-            PRIMARY KEY (follower_id, followee_id)
-            )
+            add_time INT NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (add_time)
+        );
         """)
         response = "Table 'follows' created."
     else:
@@ -289,6 +291,7 @@ def get_follows_list():
                 JOIN users
                 ON follower_id = user_id
                 WHERE followee_id = %s
+                ORDER BY add_time DESC
             """, (user_id,))
             followers = cursor.fetchall()
             return jsonify(followers), 200
@@ -299,6 +302,7 @@ def get_follows_list():
                 JOIN users
                 ON followee_id = user_id
                 WHERE follower_id = %s
+                ORDER BY add_time DESC
             """, (user_id,))
             
             followees = cursor.fetchall()

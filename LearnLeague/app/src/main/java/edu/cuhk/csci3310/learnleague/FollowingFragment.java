@@ -95,7 +95,7 @@ public class FollowingFragment extends Fragment {
 
         mAdapter = new FollowListAdapter(getActivity(), mUserList);
 
-
+        // Preload the following list in other's profile and use in if ready
         User.getFollowingList(owner.getUserID(), new OnFollowsListLoadedListener() {
             @Override
             public void onFollowsListLoaded(LinkedList<User> followsList) {
@@ -112,6 +112,7 @@ public class FollowingFragment extends Fragment {
                     });
             }
         });
+
 
         // Connect the adapter with the RecyclerView.
         mRecyclerView.setAdapter(mAdapter);

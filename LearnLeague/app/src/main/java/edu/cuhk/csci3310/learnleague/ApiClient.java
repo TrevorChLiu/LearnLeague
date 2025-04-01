@@ -171,7 +171,7 @@ public class ApiClient {
                                 jsonResponse.getString("hashedpassword"),
                                 jsonResponse.getString("username"),
                                 jsonResponse.getString("email"),
-                                jsonResponse.getInt("avatarversion")
+                                jsonResponse.getLong("avatarversion")
                         );
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
