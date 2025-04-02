@@ -144,6 +144,11 @@ public class User {
         this.followersList.addAll(followersList);
     }
 
+    /**
+     * Initialize the current user's account.
+     * @param userID What's your id
+     * @param listener Help to for login
+     */
     public static void initUser(String userID, OnCurrentUserLoadedListener listener) {
         user = new User();
         user.userID = userID;
@@ -156,6 +161,9 @@ public class User {
         user.loadFollowsList();
     }
 
+    /**
+     * Load the ranking information.
+     */
     public static void loadRanking() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
@@ -170,6 +178,9 @@ public class User {
         });
     }
 
+    /**
+     * In case of information change, update the current values in the memory.
+     */
     public static void reloadCurrentUser() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
@@ -177,6 +188,9 @@ public class User {
         });
     }
 
+    /**
+     * Load following and follower list of the user.
+     */
     public void loadFollowsList() {
         followingList = new LinkedList<>();
         followersList = new LinkedList<>();
@@ -240,20 +254,8 @@ public class User {
         ApiClient.updateFollow(follower.getUserID(), followee.getUserID(), "unfollow");
     }
 
-    public static void userFollow(String follower_id, String followee_id) {
-        ApiClient.updateFollow(follower_id, followee_id, "follow");
-    }
-
-    public static void userUnfollow(String follower_id, String followee_id) {
-        ApiClient.updateFollow(follower_id, followee_id, "unfollow");
-    }
-
     public static void createUser(String userID, String password, OnUserCreationResultListener listener) {
         ApiClient.createUser(userID, Encryption.sha256Hash(password), listener);
-    }
-
-    public static void initNewUser() {
-
     }
 
     public void updatePassword(String password) {
@@ -329,6 +331,11 @@ public class User {
         return "@" + userID + ": " + userName + ", email: " + userEmail;
     }
 
+    /**
+     * Two users are equal as long as they have the same id.
+     * @param obj Other obj to be compared.
+     * @return True if equal
+     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if (this == obj) return true;

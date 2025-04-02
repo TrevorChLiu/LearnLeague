@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 
 public class Compressor {
     /**
-     * Compress the bitmap image
+     * Compress the bitmap image.
      * @param bitmap The image
      * @param quality How much quality do you want
      * @return A compressed bitmap image

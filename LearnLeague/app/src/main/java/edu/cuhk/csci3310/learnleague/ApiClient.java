@@ -322,6 +322,11 @@ public class ApiClient {
         });
     }
 
+    /**
+     * Add a study record to database.
+     * @param userID The user ID to be added.
+     * @param seconds Time of study in seconds.
+     */
     public static void insertStudyRecordToday(String userID, int seconds) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
@@ -356,6 +361,10 @@ public class ApiClient {
         });
     }
 
+    /**
+     * Get study record, and the result will be set to User class.
+     * @param listener Optional listener to act after getting the result.
+     */
     public static void getStudyRecords(OnRankingLoadedListener listener) {
 
         OkHttpClient client = new OkHttpClient();
@@ -400,6 +409,12 @@ public class ApiClient {
         });
     }
 
+    /**
+     * Helper function to parse the json array into User.
+     * @param jsonArray json array from the server.
+     * @param ranking A list to hold these users.
+     * @throws JSONException In case of error.
+     */
     private static void parseUserList(JSONArray jsonArray, LinkedList<User> ranking) throws JSONException {
         ranking.clear();
         for (int i = 0; i < jsonArray.length(); i++) {
