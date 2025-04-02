@@ -47,7 +47,7 @@ public class ProfileMainFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
-    private ViewPagerAdapter viewPagerAdapter;
+    private ProfileViewPagerAdapter profileViewPagerAdapter;
     private View view;
 
     public ProfileMainFragment() {
@@ -91,8 +91,8 @@ public class ProfileMainFragment extends Fragment {
         // Create the nav tab layout for this page
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager2);
-        viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPager2.setAdapter(viewPagerAdapter);
+        profileViewPagerAdapter = new ProfileViewPagerAdapter(this);
+        viewPager2.setAdapter(profileViewPagerAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

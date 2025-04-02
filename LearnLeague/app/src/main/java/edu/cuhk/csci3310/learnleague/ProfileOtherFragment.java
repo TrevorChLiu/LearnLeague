@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,7 @@ public class ProfileOtherFragment extends Fragment {
     private User owner;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
-    private ViewPagerAdapter viewPagerAdapter;
+    private ProfileViewPagerAdapter profileViewPagerAdapter;
     private View view;
     int parentContainer;
     OnStopProfileOtherListener onStopListener = null;
@@ -87,8 +86,8 @@ public class ProfileOtherFragment extends Fragment {
         // Create the nav tab layout for this page
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager2);
-        viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPager2.setAdapter(viewPagerAdapter);
+        profileViewPagerAdapter = new ProfileViewPagerAdapter(this);
+        viewPager2.setAdapter(profileViewPagerAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

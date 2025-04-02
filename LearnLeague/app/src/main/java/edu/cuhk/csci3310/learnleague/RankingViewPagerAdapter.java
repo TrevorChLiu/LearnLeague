@@ -2,12 +2,10 @@ package edu.cuhk.csci3310.learnleague;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class ViewPagerAdapter extends FragmentStateAdapter {
-
-    public ViewPagerAdapter(@NonNull Fragment fragment) {
+public class RankingViewPagerAdapter extends FragmentStateAdapter {
+    public RankingViewPagerAdapter(@NonNull Fragment fragment) {
         super(fragment);
     }
 
@@ -15,10 +13,10 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0: return new PostsFragment();
-            case 1: return new CommentsFragment();
-            case 3: return new RepliesFragment();
-            default: return new PostsFragment();
+            case 0: return new RankingDayFragment();
+            case 1: return new RankingWeekFragment();
+            case 2: return new RankingMonthFragment();
+            default: return new RankingDayFragment();
         }
     }
 
