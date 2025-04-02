@@ -5,7 +5,7 @@ You can see a folder called *LearnLeague* and a Python file called *remote_serve
 ## Dependencies (Highly important)
 Please download following dependencies before launching this project:
 * MySQL server. You can download the community from the official website: https://dev.mysql.com/downloads/mysql/. After that you can download the server from the community easily.
-* Flask and MySQL connector for Python. Run this code in your terminal: `pip install flask mysql-connector-python`.
+* Flask, MySQL connector, and PIL for Python. Run this code in your terminal: `pip install flask mysql-connector-python PIL`.
 
 After two dependencies are downloaded:
 1. Open the MySQL CML command line client and type: `create database learn_league_db;` to create our simulated remote database.

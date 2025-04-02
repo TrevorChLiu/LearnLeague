@@ -3,7 +3,6 @@ import mysql.connector
 import sys
 from io import BytesIO
 from PIL import Image
-from io import BytesIO
 import hashlib
 import time
 
@@ -16,11 +15,10 @@ def get_db_connection():
         user="Trev",    # Change to yours
         password="20031231Lch.",    # Change to yours
         database="learn_league_db",
-        consume_results=True  # Helps with large data retrieval
+        consume_results=True  # Automatically clean mysql buffer
     )
 
 # Create all necessary tables
-@app.route("/initialize_db", methods=["post"])
 def initialize_db():
     conx = get_db_connection()
     cursor = conx.cursor()
@@ -28,11 +26,12 @@ def initialize_db():
 
     responses.append(check_table_user(conx, cursor))
     responses.append(check_table_follows(conx, cursor))
+    responses.append(check_table_study_records(conx, cursor))
     
     cursor.close()
     conx.close()
 
-    return "; ".join(responses)
+    print("; ".join(responses))
 
 def check_table_user(conx, cursor):
     # Check table existence
@@ -75,6 +74,109 @@ def check_table_follows(conx, cursor):
         response = "Table 'follows' exists."
     conx.commit()
     return response
+
+def check_table_study_records(conx, cursor):
+    cursor.execute("SHOW TABLES LIKE 'study_records'")
+
+    if not cursor.fetchone():
+        cursor.execute("""
+            CREATE TABLE study_records (
+                user_id VARCHAR(20) NOT NULL,
+                seconds INT NOT NULL DEFAULT 0,
+                record_date DATE NOT NULL,
+                PRIMARY KEY (user_id, record_date)
+            )
+        """)
+        response = "Table 'study_records' created."
+        conx.commit()
+    else:
+        response = "Table 'study_records' exists."
+    
+    return response
+
+def insert_study_record(user_id, seconds, record_date=None):
+    conx = get_db_connection()
+    cursor = conx.cursor()
+    
+    try:
+        if record_date is None:
+            cursor.execute("""
+                INSERT INTO study_records (user_id, seconds, record_date)
+                VALUES (%s, %s, CURDATE())
+                ON DUPLICATE KEY UPDATE seconds = seconds + %s;
+                """, (user_id, seconds, seconds))
+        else:
+            cursor.execute("""
+                INSERT INTO study_records (user_id, seconds, record_date)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE seconds = seconds + %s;
+                """, (user_id, seconds, record_date, seconds))
+        conx.commit()
+        print("New record for: " + user_id)
+    except mysql.connector.Error as err:
+        print("Failed to insert study record: " + str(err))
+    finally:
+        cursor.close()
+        conx.close()    
+
+@app.route('/insert_study_record_today', methods=['POST'])
+def insert_study_record_today():
+    data = request.json
+    user_id = data.get("userid")
+    seconds = data.get("seconds")
+    try:
+        insert_study_record(user_id, seconds)
+        return "Study record inserted."
+    except mysql.connector.Error as err:
+        return "Failed to insert study record: " + str(err), 500
+
+def get_study_records_helper(conx, cursor, time):
+    left = """SELECT u.user_id, u.hashed_password, u.username, u.email, u.avatar_version, 
+                (SELECT COUNT(*) FROM follows WHERE follower_id = u.user_id) AS followee_count, 
+                (SELECT COUNT(*) FROM follows WHERE followee_id = u.user_id) AS follower_count,
+                COALESCE(SUM(s.seconds), 0) AS total_seconds
+                FROM users u
+                LEFT JOIN study_records s ON u.user_id = s.user_id"""
+    right = "GROUP BY u.user_id;"
+    if time == "day":
+        middle = " WHERE s.record_date = CURDATE() "
+    elif time == "week":
+        middle = " WHERE YEARWEEK(s.record_date) = YEARWEEK(NOW()) "
+    elif time == "month":
+        middle = " WHERE YEAR(s.record_date) = YEAR(NOW()) AND MONTH(s.record_date) = MONTH(NOW()) "
+    statement = left + middle + right
+    
+    cursor.execute(statement)
+    return cursor.fetchall()
+    
+"""
+def study_record_decimal_to_int(ranking):
+    for i in range(len(ranking)):
+        record = list(ranking[i])
+        record[-1] = int(record[-1])
+        ranking[i] = tuple(record)
+    return ranking
+"""
+
+@app.route('/get_study_records', methods=['GET'])
+def get_study_records():
+    conx = get_db_connection()
+    cursor = conx.cursor()
+    try:
+        records = [
+            get_study_records_helper(conx, cursor, "day"),
+            get_study_records_helper(conx, cursor, "week"),
+            get_study_records_helper(conx, cursor, "month")
+        ]
+        print(records)
+        return jsonify(records)
+    except mysql.connector.Error as err:
+        print("Failed to get study recors:", str(err))
+        return "Failed to get study recors:", str(err)
+    finally:
+        cursor.close()
+        conx.close()
+
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
@@ -144,7 +246,6 @@ def get_user():
             WHERE u.user_id = %s
 """, (user_id,))
 
-        
         user = cursor.fetchone()
 
         if user:
@@ -160,13 +261,9 @@ def get_user():
             
             return jsonify(user_info), 200
         else:
-            return jsonify({
-                f'message': "404: User {user[0]} Not Found!"
-            }), 404
+            return f"404: User {user[0]} Not Found!", 404
     except mysql.connector.Error as err:
-        return jsonify({
-            "message": "500: Failed to read user!"
-        }), 500
+        return "500: Failed to read user:" + err, 500
     finally:
         cursor.close()
         conx.close()
@@ -256,10 +353,10 @@ def drop_all_tables():
 def update_avatar(user_id):
     try:
         # Get the raw binary data from the request body
-        avatar_data = request.data  # Receives the bytes directly
+        avatar_data = request.data 
 
         if not avatar_data:
-            return jsonify({'message': 'Avatar not provided!'}), 400
+            return 'Avatar not provided!', 400
 
         # Update the avatar in the database
         conx = get_db_connection()
@@ -278,12 +375,12 @@ def update_avatar(user_id):
         conx.close()
 
         if rows_affected > 0:
-            return jsonify({'message': 'Avatar updated successfully'}), 200
+            return 'Avatar updated successfully', 200
         else:
-            return jsonify({'message': 'User not found'}), 404
+            return 'User not found', 404
 
     except Exception as e:
-        return jsonify({'message': f'Error updating avatar: {str(e)}'}), 500
+        return f'Error updating avatar: {str(e)}', 500
 
 @app.route('/get_follows_list', methods=['POST'])
 def get_follows_list():
@@ -362,13 +459,19 @@ def compress_image(image_data, quality=20):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
+        initialize_db()
         app.run(host="0.0.0.0", port=5000, debug=True)
     else: 
+        if "test" in sys.argv:
+            insert_study_record("Trev", 1000)
+            insert_study_record("Trev", 2000)
+            insert_study_record("Fiona", 5000, "2019-01-01")
+            insert_study_record("Fiona", 3000, "2019-01-01")
         if "reset" in sys.argv:
             drop_all_tables()
         if "demo" in sys.argv:
             users = ["Alan", "Bob", "Charlie", "Delta", "Eve","Fiona", "Trev", "Somebody", "Mia", "Hunter", "Lester"]
-            idx = 100;
+            
 
             conx = get_db_connection()
             cursor = conx.cursor()
@@ -377,6 +480,7 @@ if __name__ == '__main__':
 
             try:
                 index = 0
+                idx = 100;
                 for user in users:
                     avatar_path = f"demo_images/{user}.jpg" 
                     
@@ -392,6 +496,12 @@ if __name__ == '__main__':
                     
                     for i in range(index + 1, len(users)):
                         cursor.execute("INSERT INTO follows (follower_id, followee_id) VALUES (%s, %s)", (users[i], user))
+
+                    if index % 2 == 0:
+                        insert_study_record(user, index * 1000 + idx)
+                    else:
+                        insert_study_record(user, index * 500 + idx, "2025-04-01")
+
                     idx += 1
                     index += 1;
                 conx.commit()

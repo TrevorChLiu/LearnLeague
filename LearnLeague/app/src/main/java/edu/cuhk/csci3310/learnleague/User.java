@@ -26,6 +26,9 @@ public class User {
 
     private static User user;
 
+    // Time of study for the time period. This is temporary.
+    private int tmp_seconds;
+
     private LinkedList<User> followingList = new LinkedList<User>();
     private LinkedList<User> followersList = new LinkedList<User>();
 
@@ -34,6 +37,13 @@ public class User {
     }
     public LinkedList<User> getFollowersList() {
         return followersList;
+    }
+
+    public int getTmp_seconds() {
+        return tmp_seconds;
+    }
+    public void setTmp_seconds(int tmp_seconds) {
+        this.tmp_seconds = tmp_seconds;
     }
 
     /**
@@ -243,6 +253,10 @@ public class User {
             ApiClient.updateUser(this);
         });
 
+    }
+
+    public static void insertStudyRecordToday(int seconds) {
+        ApiClient.insertStudyRecordToday(User.user.getUserID(), seconds);
     }
 
     public int getNumFollowing() {

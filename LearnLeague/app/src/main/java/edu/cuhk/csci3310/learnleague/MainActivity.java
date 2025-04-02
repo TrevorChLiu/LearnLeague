@@ -1,7 +1,7 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.os.Bundle;
-
+import android.util.Log;
 
 
 import androidx.activity.EdgeToEdge;
@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         // User.createUser("Trev", "TrevPassword");
 
         User.initUser("Trev");
-
 
     }
 

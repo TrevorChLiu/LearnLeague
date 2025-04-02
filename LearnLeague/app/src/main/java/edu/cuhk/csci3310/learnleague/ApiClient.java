@@ -20,34 +20,6 @@ public class ApiClient {
     // remote server's address
     private static final String BASE_URL = "http://192.168.31.41:5000";
 
-    /**
-     * Initialize the database
-     */
-    public static void initializeDB() {
-        OkHttpClient client = new OkHttpClient();
-
-        RequestBody body = RequestBody.create(
-                "",
-                MediaType.get("application/json; charset=utf-8")
-        );
-
-        Request request = new Request.Builder()
-                .url(BASE_URL + "/initialize_db")
-                .post(body)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response.body().string());
-            }
-        });
-    }
 
     /**
      * Write the new user's info into database.
@@ -340,5 +312,96 @@ public class ApiClient {
         });
     }
 
+    public static void insertStudyRecordToday(String userID, int seconds) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("userid", userID);
+            json.put("seconds", seconds);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/insert_study_record_today")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println(response.body().string());
+            }
+        });
+    }
+
+    public static void getStudyRecords(LinkedList<User> dayRanking, LinkedList<User> weekRanking,
+                                       LinkedList<User> monthRanking, OnRankingLoadedListener listener) {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/get_study_records") // No query params
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String responseBody = response.body().string();
+                        JSONArray jsonResponse = new JSONArray(responseBody);
+
+                        parseUserList(jsonResponse.getJSONArray(0), dayRanking);
+                        parseUserList(jsonResponse.getJSONArray(1), weekRanking);
+                        parseUserList(jsonResponse.getJSONArray(2), monthRanking);
+
+                        if (listener != null) {
+                            listener.onLoaded(dayRanking, weekRanking, monthRanking);
+                        }
+
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    Log.e("Failed to get study records", response.message());
+                }
+            }
+        });
+    }
+
+    private static void parseUserList(JSONArray jsonArray, LinkedList<User> ranking) throws JSONException {
+        ranking.clear();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONArray userArray = jsonArray.getJSONArray(i);
+            User user = new User(
+                    userArray.getString(0),
+                    userArray.getString(1),
+                    userArray.getString(2),
+                    userArray.getString(3),
+                    userArray.getLong(4),
+                    userArray.getInt(5),
+                    userArray.getInt(6)
+            );
+            user.setTmp_seconds(userArray.getInt(7));
+            ranking.add(user);
+        }
+    }
 }
 
