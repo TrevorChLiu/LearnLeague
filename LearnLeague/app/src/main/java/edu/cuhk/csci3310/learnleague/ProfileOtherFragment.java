@@ -159,6 +159,8 @@ public class ProfileOtherFragment extends Fragment {
         Button followButton = view.findViewById(R.id.profile_follow_button);
         String followButtonText = User.getCurrentUser().hasFollowed(owner) ? "Following" : "Follow";
         followButton.setText(followButtonText);
+        if (owner.equals(User.getCurrentUser()))
+            followButton.setVisibility(View.GONE);
         followButton.setOnClickListener(v -> {
             if (followButton.getText().toString().equals("Following")) {
                 followButton.setText("Follow");

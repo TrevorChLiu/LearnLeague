@@ -102,6 +102,8 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
         // Register follow button
         String followButtonText = User.getCurrentUser().hasFollowed(mUser) ? "Following" : "Follow";
         holder.followButton.setText(followButtonText);
+        if (mUser.equals(User.getCurrentUser()))
+            holder.followButton.setVisibility(View.GONE);
         holder.followButton.setOnClickListener(v -> {
             if (holder.followButton.getText().toString().equals("Following")) {
                 holder.followButton.setText("Follow");
