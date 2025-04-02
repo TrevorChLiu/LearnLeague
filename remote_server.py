@@ -137,7 +137,7 @@ def get_study_records_helper(conx, cursor, time):
                 COALESCE(SUM(s.seconds), 0) AS total_seconds
                 FROM users u
                 LEFT JOIN study_records s ON u.user_id = s.user_id"""
-    right = "GROUP BY u.user_id;"
+    right = "GROUP BY u.user_id ORDER BY total_seconds DESC;"
     if time == "day":
         middle = " WHERE s.record_date = CURDATE() "
     elif time == "week":
