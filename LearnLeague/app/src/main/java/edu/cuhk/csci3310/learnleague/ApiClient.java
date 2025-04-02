@@ -26,7 +26,7 @@ public class ApiClient {
      * @param userID New user's id.
      * @param hashedPassword Hashed password of the new user.
      */
-    public static void createUser(String userID, String hashedPassword) {
+    public static void createUser(String userID, String hashedPassword, OnUserCreationResultListener listener) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
 
@@ -55,7 +55,12 @@ public class ApiClient {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response.body().string());
+                if (response.isSuccessful()) {
+                    listener.onResult(false);
+                } else if (response.code() == 409) {
+                    listener.onResult(true);
+                } else
+                    System.out.println(response.body().string());
             }
         });
     }
@@ -105,7 +110,7 @@ public class ApiClient {
      * Setup a user given user id. This is asynchronous.
      * @param userID User id.
      */
-    public static void getCurrentUser(String userID) {
+    public static void getCurrentUser(String userID, OnCurrentUserLoadedListener listener) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
 
@@ -147,9 +152,14 @@ public class ApiClient {
                                 jsonResponse.getInt("numfollowee"),
                                 jsonResponse.getInt("numfollower")
                         );
+                        if (listener != null)
+                            listener.onLoaded(User.getCurrentUser());
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
+                } else if (response.code() == 404) {
+                    if (listener != null)
+                        listener.onLoaded(null);
                 } else {
                     try {
                         JSONObject jsonResponse = new JSONObject(response.body().string());
@@ -346,8 +356,8 @@ public class ApiClient {
         });
     }
 
-    public static void getStudyRecords(LinkedList<User> dayRanking, LinkedList<User> weekRanking,
-                                       LinkedList<User> monthRanking, OnRankingLoadedListener listener) {
+    public static void getStudyRecords(OnRankingLoadedListener listener) {
+
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -365,6 +375,10 @@ public class ApiClient {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     try {
+                        LinkedList<User> dayRanking = new LinkedList<>();
+                        LinkedList<User> weekRanking = new LinkedList<>();
+                        LinkedList<User> monthRanking = new LinkedList<>();
+
                         String responseBody = response.body().string();
                         JSONArray jsonResponse = new JSONArray(responseBody);
 

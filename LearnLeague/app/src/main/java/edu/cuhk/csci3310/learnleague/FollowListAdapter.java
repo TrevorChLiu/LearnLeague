@@ -27,8 +27,6 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
     private OnStopProfileOtherListener onStopProfileOtherListener;
     private int containerResID;
 
-    // the following pre-set res image path is for debugging, but good to let students to start with
-
     class FollowViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView avatarView;
@@ -83,7 +81,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
     @NonNull
     @Override
     public FollowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.followlist_user, parent, false);
+        View mItemView = mInflater.inflate(R.layout.followlist_user_item, parent, false);
         return new FollowViewHolder(mItemView, this);
     }
 

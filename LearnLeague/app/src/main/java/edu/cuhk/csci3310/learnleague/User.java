@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,10 +28,27 @@ public class User {
     private static User user;
 
     // Time of study for the time period. This is temporary.
-    private int tmp_seconds;
+    private int tmp_seconds = -1;
 
     private LinkedList<User> followingList = new LinkedList<User>();
     private LinkedList<User> followersList = new LinkedList<User>();
+
+    private static LinkedList<User> dayRanking = new LinkedList<>();
+    private static LinkedList<User> weekRanking = new LinkedList<>();
+    private static LinkedList<User> monthRanking = new LinkedList<>();
+    public static LinkedList<User> getDayRanking() {
+        return dayRanking;
+    }
+
+    public static LinkedList<User> getWeekRanking() {
+        return weekRanking;
+    }
+
+    public static LinkedList<User> getMonthRanking() {
+        return monthRanking;
+    }
+
+
 
     public LinkedList<User> getFollowingList() {
         return followingList;
@@ -126,22 +144,36 @@ public class User {
         this.followersList.addAll(followersList);
     }
 
-    public static void initUser(String userID) {
+    public static void initUser(String userID, OnCurrentUserLoadedListener listener) {
         user = new User();
         user.userID = userID;
 
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            ApiClient.getCurrentUser(userID);
+            ApiClient.getCurrentUser(userID, listener);
         });
         user.loadFollowsList();
+    }
+
+    public static void loadRanking() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.getStudyRecords(new OnRankingLoadedListener() {
+                @Override
+                public void onLoaded(LinkedList<User> dayRanking, LinkedList<User> weekRanking, LinkedList<User> monthRanking) {
+                    User.dayRanking = dayRanking;
+                    User.weekRanking = weekRanking;
+                    User.monthRanking = monthRanking;
+                }
+            });
+        });
     }
 
     public static void reloadCurrentUser() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            ApiClient.getCurrentUser(User.user.getUserID());
+            ApiClient.getCurrentUser(User.user.getUserID(), null);
         });
     }
 
@@ -216,8 +248,12 @@ public class User {
         ApiClient.updateFollow(follower_id, followee_id, "unfollow");
     }
 
-    public static void createUser(String userID, String password) {
-        ApiClient.createUser(userID, Encryption.sha256Hash(password));
+    public static void createUser(String userID, String password, OnUserCreationResultListener listener) {
+        ApiClient.createUser(userID, Encryption.sha256Hash(password), listener);
+    }
+
+    public static void initNewUser() {
+
     }
 
     public void updatePassword(String password) {

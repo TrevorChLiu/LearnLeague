@@ -4,20 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import java.util.LinkedList;
+
 public class RankingViewPagerAdapter extends FragmentStateAdapter {
-    public RankingViewPagerAdapter(@NonNull Fragment fragment) {
+    private int containerResID;
+
+    RankingListFragment rankingListFragment;
+
+    public RankingViewPagerAdapter(@NonNull Fragment fragment, int containerResID) {
         super(fragment);
+        this.containerResID = containerResID;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0: return new RankingDayFragment();
-            case 1: return new RankingWeekFragment();
-            case 2: return new RankingMonthFragment();
-            default: return new RankingDayFragment();
+            case 0: rankingListFragment = new RankingListFragment(User.getDayRanking(), containerResID); break;
+            case 1: rankingListFragment = new RankingListFragment(User.getWeekRanking(), containerResID); break;
+            case 2: rankingListFragment = new RankingListFragment(User.getMonthRanking(), containerResID); break;
+            default: rankingListFragment = new RankingListFragment(User.getDayRanking(), containerResID); break;
         }
+        return rankingListFragment;
     }
 
     @Override

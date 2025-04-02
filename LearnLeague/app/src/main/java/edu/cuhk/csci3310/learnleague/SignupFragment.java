@@ -93,37 +93,42 @@ public class SignupFragment extends Fragment {
         EditText accountid = getView().findViewById(R.id.id_input);
         EditText password = getView().findViewById(R.id.password_input);
         EditText comfirm = getView().findViewById(R.id.confirm_input);
-
-        int response = validateLogin(accountid.getText().toString(), password.getText().toString(), comfirm.getText().toString());
+        String strID = accountid.getText().toString();
+        String strPassword = password.getText().toString();
+        String strConfirm = comfirm.getText().toString();
 
 
         Toast toast = new Toast(getActivity());
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layoutToast);
-        if (response == 1) {
+
+        if (strID.isEmpty()) {
             toastText.setText("Oops! This account ID has already been registered or is empty. Try another or log in if this is your account.");
             toast.show();
-        } else if (response == 2) {
+        } else if (!strPassword.equals(strConfirm)) {
             toastText.setText("The confirmation password doesn’t match the original. Please try again.");
             toast.show();
         } else {
-            startActivity(new Intent(getActivity(), MainActivity.class));
+            User.createUser(strID, strPassword, new OnUserCreationResultListener() {
+                @Override
+                public void onResult(boolean existed) {
+                    if (existed) {
+                        toastText.setText("Oops! This account ID has already been registered or is empty. Try another or log in if this is your account.");
+                        toast.show();
+                    } else {
+                        User.initUser(strID, new OnCurrentUserLoadedListener() {
+                            @Override
+                            public void onLoaded(User user) {
+                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                if (getActivity() != null) {
+                                    getActivity().finish();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
-    }
 
-    /**
-     * Validate the signup info
-     * @param accountid username
-     * @param password password
-     * @param confirmed_password password again
-     * @return 0 for success, 1 for account existing, and 2 for confirmed password mismatch
-     */
-    private int validateLogin(String accountid, String password, String confirmed_password) {
-        if (accountid.isEmpty())
-            return 1;
-        else if (!password.equals(confirmed_password))
-            return 2;
-        else
-            return 0;
     }
 }

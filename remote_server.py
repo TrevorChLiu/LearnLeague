@@ -148,15 +148,7 @@ def get_study_records_helper(conx, cursor, time):
     
     cursor.execute(statement)
     return cursor.fetchall()
-    
-"""
-def study_record_decimal_to_int(ranking):
-    for i in range(len(ranking)):
-        record = list(ranking[i])
-        record[-1] = int(record[-1])
-        ranking[i] = tuple(record)
-    return ranking
-"""
+
 
 @app.route('/get_study_records', methods=['GET'])
 def get_study_records():
@@ -168,7 +160,6 @@ def get_study_records():
             get_study_records_helper(conx, cursor, "week"),
             get_study_records_helper(conx, cursor, "month")
         ]
-        print(records)
         return jsonify(records)
     except mysql.connector.Error as err:
         print("Failed to get study recors:", str(err))
@@ -188,6 +179,9 @@ def create_user():
     cursor = conx.cursor()
 
     try:
+        cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (user_id,))
+        if cursor.fetchone() is not None:
+            return "User ID exists", 409
         cursor.execute("INSERT INTO users (user_id, hashed_password, username) VALUES (%s, %s, %s)", 
                        (user_id, hashed_password, user_id))
         conx.commit()
@@ -261,7 +255,7 @@ def get_user():
             
             return jsonify(user_info), 200
         else:
-            return f"404: User {user[0]} Not Found!", 404
+            return f"404: User {user_id} Not Found!", 404
     except mysql.connector.Error as err:
         return "500: Failed to read user:" + err, 500
     finally:
@@ -463,10 +457,7 @@ if __name__ == '__main__':
         app.run(host="0.0.0.0", port=5000, debug=True)
     else: 
         if "test" in sys.argv:
-            insert_study_record("Trev", 1000)
-            insert_study_record("Trev", 2000)
-            insert_study_record("Fiona", 5000, "2019-01-01")
-            insert_study_record("Fiona", 3000, "2019-01-01")
+            pass
         if "reset" in sys.argv:
             drop_all_tables()
         if "demo" in sys.argv:
@@ -492,7 +483,7 @@ if __name__ == '__main__':
                         avatar_byte = None  
 
                     cursor.execute("INSERT INTO users (user_id, hashed_password, username, email, avatar) VALUES (%s, %s, %s, %s, %s)", 
-                                (user, user + "Password", user + str(idx), user + "@gmail.com", avatar_byte))
+                                (user, sha256_hash(user + "Password"), user + str(idx), user + "@gmail.com", avatar_byte))
                     
                     for i in range(index + 1, len(users)):
                         cursor.execute("INSERT INTO follows (follower_id, followee_id) VALUES (%s, %s)", (users[i], user))
@@ -504,6 +495,10 @@ if __name__ == '__main__':
 
                     idx += 1
                     index += 1;
+                
+                insert_study_record("Alan", 10200, "2025-04-30")
+                insert_study_record("Bob", 10200, "2025-04-30")
+                insert_study_record("Delta", 10200, "2025-04-30")
                 conx.commit()
                 print("Demo created")
             except mysql.connector.Error as err:

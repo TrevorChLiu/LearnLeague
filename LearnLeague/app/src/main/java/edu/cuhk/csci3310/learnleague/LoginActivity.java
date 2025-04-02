@@ -26,6 +26,9 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Load global items in advance to enhance the performance
+        preloadGlobalItems();
+
         // initially shows login page
         replaceFragment(new LoginFragment());
 
@@ -42,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
                 .commit();
     }
 
-
+    private void preloadGlobalItems() {
+        User.loadRanking();
+    }
 
 }

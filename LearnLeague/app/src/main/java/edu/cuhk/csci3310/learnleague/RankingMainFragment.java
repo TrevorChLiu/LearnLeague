@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.LinkedList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +32,7 @@ public class RankingMainFragment extends Fragment {
     private ViewPager2 viewPager2;
     private RankingViewPagerAdapter rankingViewPagerAdapter;
     private View view;
+    private int containerResID;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -37,6 +40,10 @@ public class RankingMainFragment extends Fragment {
 
     public RankingMainFragment() {
         // Required empty public constructor
+    }
+
+    public RankingMainFragment(int containerResID) {
+        this.containerResID = containerResID;
     }
 
     /**
@@ -74,7 +81,7 @@ public class RankingMainFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.tabLayout_ranking);
         viewPager2 = view.findViewById(R.id.viewPager2_ranking);
-        rankingViewPagerAdapter = new RankingViewPagerAdapter(this);
+        rankingViewPagerAdapter = new RankingViewPagerAdapter(this, containerResID);
         viewPager2.setAdapter(rankingViewPagerAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -102,6 +109,9 @@ public class RankingMainFragment extends Fragment {
             }
         });
 
+
+
         return view;
     }
+
 }

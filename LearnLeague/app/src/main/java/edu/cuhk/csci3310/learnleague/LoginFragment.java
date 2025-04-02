@@ -63,7 +63,6 @@ public class LoginFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
     }
 
     @Override
@@ -95,23 +94,29 @@ public class LoginFragment extends Fragment {
     private void submitLogin() {
         EditText accountid = getView().findViewById(R.id.id_input);
         EditText password = getView().findViewById(R.id.password_input);
+        String strID = accountid.getText().toString();
+        String strPassword = password.getText().toString();
 
-        // Success to login
-        if (validateLogin(accountid.getText().toString(), password.getText().toString())) {
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            if (getActivity() != null) {
-                getActivity().finish();
+        User.initUser(strID, new OnCurrentUserLoadedListener() {
+            @Override
+            public void onLoaded(User user) {
+                if (user == null || !user.getHashedPassword().equals(Encryption.sha256Hash(strPassword))) {
+                    getActivity().runOnUiThread(()->{
+                        toastText.setText("Oops! It looks like the ID or password is invalid. Please check and re-enter.");
+
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setView(layoutToast);
+                        toast.show();
+                    });
+                } else {
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                    }
+                }
             }
-        } else {
-            // Fail to login
-
-            toastText.setText("Oops! It looks like the ID or password is invalid. Please check and re-enter.");
-
-            Toast toast = new Toast(getActivity());
-            toast.setDuration(Toast.LENGTH_SHORT);
-            toast.setView(layoutToast);
-            toast.show();
-        }
+        });
     }
 
     private Boolean validateLogin(String accountid, String password) {

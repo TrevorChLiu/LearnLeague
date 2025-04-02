@@ -5,13 +5,13 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import java.util.LinkedList;
 
-import com.google.android.material.tabs.TabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +61,7 @@ public class RankingFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
@@ -71,14 +72,16 @@ public class RankingFragment extends Fragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
 
 
-        rankingMainFragment= new RankingMainFragment();
+        rankingMainFragment= new RankingMainFragment(R.id.ranking_fragment_container);
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.ranking_fragment_container, rankingMainFragment).commit();
 
         return view;
     }
 
-
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        User.loadRanking();
+    }
 }

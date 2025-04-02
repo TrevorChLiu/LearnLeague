@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="6dp"
+    android:gravity="center_vertical"
+    android:background="@color/very_dark_gray">
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:contentDescription="Avatar"
+        android:src="@drawable/default_avatar"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="8dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="3"
+        >
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\@user_id"
+            android:textSize="16sp"
+            android:textColor="@color/middle_gray" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/ranking_hrs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100.56 hours"
+        android:textColor="@color/white"
+        android:layout_weight="1"
+        />
+
+    <TextView
+        android:id="@+id/ranking_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="No.100"
+        android:textSize="25dp"
+        android:layout_weight="1"
+        />
+
+</LinearLayout>

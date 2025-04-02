@@ -53,11 +53,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        // Initialize account user
-        // User.createUser("Trev", "TrevPassword");
 
-        User.initUser("Trev");
-        
 
     }
 
