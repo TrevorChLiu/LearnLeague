@@ -1,10 +1,52 @@
 <resources>
+    <!-- Common strings -->
+    <string name="username">Username</string>
+    <string name="date_placeholder">2025&#8211;04&#8211;01 12:00</string>
+    <string name="view_information">View Information</string>
+    <string name="likes_count">Likes (%1$d)</string>
+    <string name="view_profile">View Profile</string>
+    <string name="reply_button">Reply</string>
+    <string name="new_post_button">Add New Post</string>
+    <string name="community_title">Community Title</string>
+    <string name="user_avatar_description">User Avatar</string>
+
+    <!-- Comment item strings -->
+    <string name="comment_content">Comment Content</string>
+    <string name="comments_button">Comments</string>
+
+    <!-- Post item strings -->
+    <string name="post_title">Post Title</string>
+    <string name="post_content">Post Content</string>
+    <string name="comment_count">Comments (%1$d)</string>
+
+    <!-- activity_post_detail.xml-->
+    <string name="post_details">Post Details</string>
+    <string name="comments_section">Comments</string>
+    <string name="write_comment">Write A Comment…</string>
+    <string name="send">Send</string>
+
+    <!--Activity_new_post.xml-->
+    <string name="create_new_post">Create New Post</string>
+    <string name="post_title_hint">Enter Post Title</string>
+    <string name="post_content_hint">Enter Post Content</string>
+    <string name="submit_post">Submit Post</string>
+
+    <!--activity_user_profile.xml-->
+    <string name="user_profile">User Profile</string>
+    <string name="user_id_format">User ID: %1$s</string>
+    <string name="join_date_format">Join date: %1$s</string>
+    <string name="user_bio_title">Biography</string>
+    <string name="user_bio_empty">This user hasn\'t written anything yet…</string>
+    <string name="stats_title">Learning Statistics</string>
+    <string name="courses_count">Courses</string>
+    <string name="posts_count">Posts</string>
+    <string name="likes_received">Likes Received</string>
+    <string name="user_posts">Published Posts</string>
     <string name="app_name">LearnLeague</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="community">Community</string>
-    <string name="profile">Profile</string>
+
+    <!-- Add the bottom navigation menu strings -->
     <string name="courses">Courses</string>
-    <string name="ranking">Ranking</string>
     <string name="Ranking">Ranking</string>
+    <string name="profile">Profile</string>
+    <string name="community">Community</string>
 </resources>
