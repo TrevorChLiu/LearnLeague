@@ -1,0 +1,306 @@
+{
+  "test_conn": {
+    "message": "Connection successful"
+  },
+  "posts": [
+    {
+      "id": "post1",
+      "title": "How to prepare for the final exam?",
+      "content": "I'm struggling with the upcoming final exam. Any tips on how to effectively prepare? Especially for the algorithms part, it's pretty challenging.",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1712323200000,
+      "likeCount": 15,
+      "commentCount": 4,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "post2",
+      "title": "Looking for study group for CSCI3310",
+      "content": "Hi everyone! I'm looking for a study group for CSCI3310 Mobile Computing. If anyone is interested, please let me know. We can meet at the library or online.",
+      "userId": "user2",
+      "userName": "Bob Wang",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=2",
+      "createdAt": 1712336800000,
+      "likeCount": 8,
+      "commentCount": 7,
+      "isLikedByCurrentUser": true
+    },
+    {
+      "id": "post3",
+      "title": "Best resources for learning Android development",
+      "content": "I've been trying to learn Android development and want to know what resources you found most helpful. Books, online courses, YouTube channels - any recommendations?",
+      "userId": "user3",
+      "userName": "Carol Li",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=3",
+      "createdAt": 1712350400000,
+      "likeCount": 20,
+      "commentCount": 7,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "post4",
+      "title": "Project showcase: My AR application",
+      "content": "I just completed my AR application project and wanted to share it with everyone. It's an app that lets you visualize 3D models in your environment. Screenshots attached!",
+      "userId": "user4",
+      "userName": "David Zhang",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=4",
+      "createdAt": 1712364000000,
+      "likeCount": 32,
+      "commentCount": 12,
+      "isLikedByCurrentUser": true
+    },
+    {
+      "id": "post5",
+      "title": "Tips for time management during exam season",
+      "content": "With exams coming up, I'm finding it difficult to manage my time effectively. How do you all balance studying for multiple courses? Any productivity tips?",
+      "userId": "user5",
+      "userName": "Emma Liu",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=5",
+      "createdAt": 1712377600000,
+      "likeCount": 28,
+      "commentCount": 9,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "post1743931599277",
+      "title": "iii",
+      "content": "ioio",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1743931599277,
+      "likeCount": 0,
+      "commentCount": 0,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "post1743932045692",
+      "title": "woww",
+      "content": "xa",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1743932045692,
+      "likeCount": 0,
+      "commentCount": 0,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "post1743933745601",
+      "title": "wad",
+      "content": "awdawd",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1743933745601,
+      "likeCount": 0,
+      "commentCount": 0,
+      "isLikedByCurrentUser": false
+    }
+  ],
+  "comments": [
+    {
+      "id": "comment1",
+      "postId": "post1",
+      "content": "I found that creating a study schedule and sticking to it really helps. Make sure to allocate more time for the topics you find difficult.",
+      "userId": "user2",
+      "userName": "Bob Wang",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=2",
+      "createdAt": 1712326800000,
+      "likeCount": 5,
+      "isLikedByCurrentUser": true
+    },
+    {
+      "id": "comment2",
+      "postId": "post1",
+      "content": "For algorithms, try to solve problems on platforms like LeetCode or HackerRank. Practice is key!",
+      "userId": "user3",
+      "userName": "Carol Li",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=3",
+      "createdAt": 1712330400000,
+      "likeCount": 3,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment3",
+      "postId": "post1",
+      "content": "Also, don't forget to review the lecture notes and past exams if available. They give you an idea of what to expect.",
+      "userId": "user4",
+      "userName": "David Zhang",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=4",
+      "createdAt": 1712334000000,
+      "likeCount": 2,
+      "isLikedByCurrentUser": false,
+      "parentCommentId": "comment2"
+    },
+    {
+      "id": "comment4",
+      "postId": "post1",
+      "content": "Thanks for all the advice! I'll definitely try these approaches.",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1712337600000,
+      "likeCount": 1,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment5",
+      "postId": "post2",
+      "content": "I'd like to join! I'm also taking CSCI3310 this semester.",
+      "userId": "user3",
+      "userName": "Carol Li",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=3",
+      "createdAt": 1712340400000,
+      "likeCount": 2,
+      "isLikedByCurrentUser": true
+    },
+    {
+      "id": "comment6",
+      "postId": "post2",
+      "content": "Count me in too! We can create a WhatsApp group for coordination.",
+      "userId": "user5",
+      "userName": "Emma Liu",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=5",
+      "createdAt": 1712344000000,
+      "likeCount": 1,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment7",
+      "postId": "post2",
+      "content": "Great! I'll DM both of you with my contact info.",
+      "userId": "user2",
+      "userName": "Bob Wang",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=2",
+      "createdAt": 1712347600000,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment8",
+      "postId": "post3",
+      "content": "The official Android documentation is surprisingly good. Start with the 'Build Your First App' tutorial.",
+      "userId": "user4",
+      "userName": "David Zhang",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=4",
+      "createdAt": 1712351200000,
+      "likeCount": 4,
+      "isLikedByCurrentUser": true
+    },
+    {
+      "id": "comment9",
+      "postId": "post3",
+      "content": "I found Udacity's Android courses really helpful. Some are free too!",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1712354800000,
+      "likeCount": 3,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment1743927124186",
+      "postId": "post2",
+      "content": "hi",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1743927124186,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment1743932023292",
+      "postId": "post2",
+      "content": "hi",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1743932023292,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment1743932029944",
+      "postId": "post2",
+      "content": "said",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1743932029944,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false
+    },
+    {
+      "id": "comment1743932032348",
+      "postId": "post2",
+      "content": "asdo",
+      "userId": "user1",
+      "userName": "Alice Chen",
+      "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+      "createdAt": 1743932032348,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false
+    }
+  ],
+  "users": [
+    {
+      "id": "user1",
+      "name": "Alice Chen",
+      "email": "alice.chen@example.com",
+      "avatarUrl": "https://i.pravatar.cc/150?img=1",
+      "bio": "Computer Science student at CUHK. Interested in AI and mobile development.",
+      "joinDate": 1696160000000,
+      "coursesCount": 5,
+      "postsCount": 8,
+      "likesReceived": 42
+    },
+    {
+      "id": "user2",
+      "name": "Bob Wang",
+      "email": "bob.wang@example.com",
+      "avatarUrl": "https://i.pravatar.cc/150?img=2",
+      "bio": "Engineering student passionate about robotics and IoT.",
+      "joinDate": 1698840000000,
+      "coursesCount": 4,
+      "postsCount": 6,
+      "likesReceived": 35
+    },
+    {
+      "id": "user3",
+      "name": "Carol Li",
+      "email": "carol.li@example.com",
+      "avatarUrl": "https://i.pravatar.cc/150?img=3",
+      "bio": "3rd year student studying Information Engineering.",
+      "joinDate": 1701460800000,
+      "coursesCount": 3,
+      "postsCount": 5,
+      "likesReceived": 28
+    },
+    {
+      "id": "user4",
+      "name": "David Zhang",
+      "email": "david.zhang@example.com",
+      "avatarUrl": "https://i.pravatar.cc/150?img=4",
+      "bio": "PhD candidate researching machine learning applications.",
+      "joinDate": 1704124800000,
+      "coursesCount": 2,
+      "postsCount": 10,
+      "likesReceived": 76
+    },
+    {
+      "id": "user5",
+      "name": "Emma Liu",
+      "email": "emma.liu@example.com",
+      "avatarUrl": "https://i.pravatar.cc/150?img=5",
+      "bio": "Exchange student from University of Toronto. Love hiking and photography.",
+      "joinDate": 1706889600000,
+      "coursesCount": 6,
+      "postsCount": 3,
+      "likesReceived": 19
+    }
+  ]
+}
