@@ -28,9 +28,8 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
     private CourseAdapter adapter;
     private List<Course> courseList;
 
-    // 用來計時 study now 的變數
-    private long studyStartMillis;
-    // 用來記錄當前正在學習的 course 在 courseList 裡的 index
+    private long studyStartMillis;// 用來計時： 開始的時間
+    // 用來記錄當前正在學習的course在courseList裡的index
     private int currentCourseIndex = -1;
 
     public CoursesFragment() {
@@ -40,8 +39,13 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 從文件中讀取之前保存的數據，如果沒有則初始化 demo 數據
+        courseList = FileStorageHelper.loadCourses(getContext());
+        if (courseList == null || courseList.isEmpty()) {
+            courseList = initializeDemoData();
+            FileStorageHelper.saveCourses(getContext(), courseList);
+        }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,8 +56,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        // 初始化 demo 數據
-        initializeCourseData();
 
         adapter = new CourseAdapter(getContext(), courseList, this);
         recyclerView.setAdapter(adapter);
@@ -69,20 +71,21 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
     }
 
     // demo 數據
-    private void initializeCourseData() {
-        courseList = new ArrayList<>();
-        courseList.add(new Course(
+    private List<Course> initializeDemoData() {
+        List<Course> demoList = new ArrayList<>();
+        demoList.add(new Course(
                 "Algorithms and Computation",
                 "https://i.ytimg.com/vi/ZA-tUyM_y7s/default.jpg",
                 10890,
                 "https://youtu.be/otE2WvX3XdQ?si=cKbDuqjG7SLRW_hx"
         ));
-        courseList.add(new Course(
+        demoList.add(new Course(
                 "Discrete Math",
                 "https://i.ytimg.com/vi/A3Ffwsnad0k/default.jpg",
                 3456,
                 "https://youtu.be/A3Ffwsnad0k?si=rrkiJdp89Iuk7_jC"
         ));
+        return demoList;
     }
 
     @Override
@@ -101,6 +104,11 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
                 courseList.add(newCourse);
                 adapter.notifyItemInserted(courseList.size() - 1);
                 Toast.makeText(getContext(), "Successfully added：" + title, Toast.LENGTH_SHORT).show();
+
+                // 保存更新後的數據到本地文件
+                FileStorageHelper.saveCourses(getContext(), courseList);
+                Toast.makeText(getContext(), "Successfully added: " + title, Toast.LENGTH_SHORT).show();
+
             } else {
                 Toast.makeText(getContext(), "Failed to add new course", Toast.LENGTH_SHORT).show();
             }
@@ -118,6 +126,9 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
                 course.setWatchTimeInSeconds(updatedWatchTime);
                 Log.d("updatedWatchTime", "+"+updatedWatchTime);
                 adapter.notifyItemChanged(currentCourseIndex);
+
+                // 保存更新後的data到本地文件
+                FileStorageHelper.saveCourses(getContext(), courseList);
             }
         }
     }

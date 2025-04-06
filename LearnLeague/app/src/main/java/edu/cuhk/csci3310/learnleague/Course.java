@@ -4,7 +4,7 @@ public class Course {
     private String title; // 標題
     private String thumbnailUrl;
     private long watchTimeInSeconds;
-//    private long lastWatchedTimestamp;
+    //    private long lastWatchedTimestamp;
     private String videoUrl; // 视频 URL
 
     public Course(String title, String thumbnailUrl, long watchTimeInSeconds, String videoUrl) {// , long lastWatchedTimestamp
@@ -27,7 +27,7 @@ public class Course {
         return watchTimeInSeconds;
     }
 
-//    public long getLastWatchedTimestamp() {
+    //    public long getLastWatchedTimestamp() {
 //        return lastWatchedTimestamp;
 //    }
     public void setWatchTimeInSeconds(long updatedWatchTime) {

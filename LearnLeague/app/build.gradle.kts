@@ -55,6 +55,11 @@ dependencies {
     // YouTube player
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
 
+    //save data
+    implementation("com.google.code.gson:gson:2.10.1")
+
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
