@@ -31,7 +31,7 @@
     <string name="post_content_hint">Enter Post Content</string>
     <string name="submit_post">Submit Post</string>
 
-    
+
     <string name="user_profile">User Profile</string>
     <string name="user_id_format">User ID: %1$s</string>
     <string name="join_date_format">Join date: %1$s</string>

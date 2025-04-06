@@ -86,4 +86,16 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
+    // for retrieve youtube data
+    implementation("com.squareup.picasso:picasso:2.71828")
+
+    // for thumbnail
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
+    // YouTube player
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
+
+    //save data
+    implementation("com.google.code.gson:gson:2.10.1")
 }

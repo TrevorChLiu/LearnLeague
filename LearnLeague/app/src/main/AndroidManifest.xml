@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -38,6 +39,17 @@
             android:name=".PostDetailActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".YouTubeActivity"
+            android:exported="true"
+            android:label="Youtube Link Input"
+            android:theme="@style/Theme.LearnLeague" />
+
+        <activity
+            android:name=".YouTubePlayerActivity"
+            android:exported="true"
+            android:label="Play Youtube Video"
+            android:theme="@style/Theme.LearnLeague" />
 
 
     </application>
