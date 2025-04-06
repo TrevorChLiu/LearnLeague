@@ -1,7 +1,6 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -149,7 +148,7 @@ public class User {
      * @param userID What's your id
      * @param listener Help to for login
      */
-    public static void initUser(String userID, OnCurrentUserLoadedListener listener) {
+    public static void initUser(String userID, OnSingleUserLoadedListener listener) {
         user = new User();
         user.userID = userID;
 
@@ -291,6 +290,13 @@ public class User {
             ApiClient.updateUser(this);
         });
 
+    }
+
+    public static void processUserById(String userID, OnSingleUserLoadedListener listener) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ApiClient.getUserForProcess(userID, listener);
+        });
     }
 
     public static void insertStudyRecordToday(int seconds) {

@@ -10,7 +10,7 @@
         android:id="@+id/community_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/community_title"
+        android:text="Community"
         android:textSize="24sp"
         android:textStyle="bold"
         android:padding="16dp"
@@ -41,5 +41,6 @@
         android:contentDescription="@string/new_post_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

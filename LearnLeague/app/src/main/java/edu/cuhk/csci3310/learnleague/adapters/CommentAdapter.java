@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.learnleague.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.cuhk.csci3310.learnleague.ApiClient;
+import edu.cuhk.csci3310.learnleague.ProfileJumpHelperActivity;
 import edu.cuhk.csci3310.learnleague.R;
 import edu.cuhk.csci3310.learnleague.models.Comment;
 
@@ -69,6 +73,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             Glide.with(context)
                     .load(comment.getUserAvatarUrl())
                     .apply(RequestOptions.circleCropTransform())
+                    .signature(new ObjectKey(comment.getUserAvatarVersion()))
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .into(holder.userAvatar);
         } else {
@@ -114,6 +119,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         // 查看用户资料按钮点击事件
         holder.viewProfileButton.setOnClickListener(v -> {
             // TODO: Jump to the user's profile
+            Intent intent = new Intent((AppCompatActivity) context, ProfileJumpHelperActivity.class);
+            intent.putExtra("userID", comment.getUserId());
+            ((AppCompatActivity) context).startActivity(intent);
         });
     }
 

@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.cuhk.csci3310.learnleague.ApiClient;
 import edu.cuhk.csci3310.learnleague.PostDetailActivity;
+import edu.cuhk.csci3310.learnleague.ProfileJumpHelperActivity;
 import edu.cuhk.csci3310.learnleague.R;
 import edu.cuhk.csci3310.learnleague.models.Post;
 
@@ -71,6 +74,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .load(post.getUserAvatarUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .placeholder(R.drawable.ic_launcher_foreground)
+                    .signature(new ObjectKey(post.getUserAvatarVersion()))
                     .into(holder.userAvatar);
         } else {
             holder.userAvatar.setImageResource(R.drawable.ic_launcher_foreground);
@@ -127,6 +131,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         // 查看用户资料按钮点击事件
         holder.viewProfileButton.setOnClickListener(v -> {
             // TODO: Jump to user's profile
+            Intent intent = new Intent((AppCompatActivity) context, ProfileJumpHelperActivity.class);
+            intent.putExtra("userID", post.getUserId());
+            ((AppCompatActivity) context).startActivity(intent);
+
         });
     }
 

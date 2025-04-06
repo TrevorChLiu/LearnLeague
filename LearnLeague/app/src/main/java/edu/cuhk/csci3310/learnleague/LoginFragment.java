@@ -97,7 +97,7 @@ public class LoginFragment extends Fragment {
         String strID = accountid.getText().toString();
         String strPassword = password.getText().toString();
 
-        User.initUser(strID, new OnCurrentUserLoadedListener() {
+        User.initUser(strID, new OnSingleUserLoadedListener() {
             @Override
             public void onLoaded(User user) {
                 if (user == null || !user.getHashedPassword().equals(Encryption.sha256Hash(strPassword))) {

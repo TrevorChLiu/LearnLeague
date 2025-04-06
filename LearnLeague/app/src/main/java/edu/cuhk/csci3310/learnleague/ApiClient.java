@@ -120,11 +120,71 @@ public class ApiClient {
         });
     }
 
+    public static void getUserForProcess(String userID, OnSingleUserLoadedListener listener) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("userid", userID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/get_user")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().string());
+
+                        User user = new User(userID,
+                                jsonResponse.getString("hashedpassword"),
+                                jsonResponse.getString("username"),
+                                jsonResponse.getString("email"),
+                                jsonResponse.getLong("avatarversion"),
+                                jsonResponse.getInt("numfollowee"),
+                                jsonResponse.getInt("numfollower"));
+                        if (listener != null)
+                            listener.onLoaded(user);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else if (response.code() == 404) {
+                    if (listener != null)
+                        listener.onLoaded(null);
+                } else {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().string());
+                        Log.e("Failed to fetch user info from the server:", jsonResponse.getString("message"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+    }
+
     /**
      * Setup a user given user id. This is asynchronous.
      * @param userID User id.
      */
-    public static void getCurrentUser(String userID, OnCurrentUserLoadedListener listener) {
+    public static void getCurrentUser(String userID, OnSingleUserLoadedListener listener) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
 
@@ -477,6 +537,7 @@ public class ApiClient {
                         post.setUserId(jsonPost.getString("userId"));
                         post.setUserName(jsonPost.getString("userName"));
                         post.setUserAvatarUrl(jsonPost.getString("userAvatarUrl"));
+                        post.setUserAvatarVersion(jsonPost.getLong("userAvatarVersion"));
                         post.setCreatedAt(new Date(jsonPost.getLong("createdAt")));
                         post.setLikeCount(jsonPost.getInt("likeCount"));
                         post.setCommentCount(jsonPost.getInt("commentCount"));
@@ -519,6 +580,7 @@ public class ApiClient {
                     post.setUserId(jsonPost.getString("userId"));
                     post.setUserName(jsonPost.getString("userName"));
                     post.setUserAvatarUrl(jsonPost.getString("userAvatarUrl"));
+                    post.setUserAvatarVersion(jsonPost.getLong("userAvatarVersion"));
                     post.setCreatedAt(new Date(jsonPost.getLong("createdAt")));
                     post.setLikeCount(jsonPost.getInt("likeCount"));
                     post.setCommentCount(jsonPost.getInt("commentCount"));
@@ -536,6 +598,10 @@ public class ApiClient {
     public static void createPost(String title, String content, ApiCallback<Post> callback) {
         JSONObject jsonBody = new JSONObject();
         try {
+            jsonBody.put("userId", User.getCurrentUser().getUserID());
+            jsonBody.put("username", User.getCurrentUser().getUserName());
+            jsonBody.put("userAvatarUrl", ApiClient.BASE_URL + "/get_avatar/" + User.getCurrentUser().getUserID());
+            jsonBody.put("userAvatarVersion", User.getCurrentUser().getAvatarVersion());
             jsonBody.put("title", title);
             jsonBody.put("content", content);
         } catch (Exception e) {
@@ -612,6 +678,7 @@ public class ApiClient {
                         comment.setUserId(jsonComment.getString("userId"));
                         comment.setUserName(jsonComment.getString("userName"));
                         comment.setUserAvatarUrl(jsonComment.getString("userAvatarUrl"));
+                        comment.setUserAvatarVersion(jsonComment.getLong("userAvatarVersion"));
                         comment.setCreatedAt(new Date(jsonComment.getLong("createdAt")));
                         comment.setLikeCount(jsonComment.getInt("likeCount"));
                         comment.setLikedByCurrentUser(jsonComment.getBoolean("isLikedByCurrentUser"));
@@ -633,6 +700,10 @@ public class ApiClient {
     public static void addComment(String postId, String content, String parentCommentId, ApiCallback<Comment> callback) {
         JSONObject jsonBody = new JSONObject();
         try {
+            jsonBody.put("userId", User.getCurrentUser().getUserID());
+            jsonBody.put("username", User.getCurrentUser().getUserName());
+            jsonBody.put("userAvatarUrl", ApiClient.BASE_URL + "/get_avatar/" + User.getCurrentUser().getUserID());
+            jsonBody.put("userAvatarVersion", User.getCurrentUser().getAvatarVersion());
             jsonBody.put("postId", postId);
             jsonBody.put("content", content);
             if (parentCommentId != null) {
@@ -669,6 +740,7 @@ public class ApiClient {
                     comment.setUserId(jsonComment.getString("userId"));
                     comment.setUserName(jsonComment.getString("userName"));
                     comment.setUserAvatarUrl(jsonComment.getString("userAvatarUrl"));
+                    comment.setUserAvatarVersion(jsonComment.getLong("userAvatarVersion"));
                     comment.setCreatedAt(new Date(jsonComment.getLong("createdAt")));
                     comment.setLikeCount(0);
                     comment.setLikedByCurrentUser(false);
@@ -758,47 +830,6 @@ public class ApiClient {
         });
     }
 
-    /*
-    // 获取用户资料
-    public static void getUserProfile(String userId, ApiCallback<User> callback) {
-        Request request = new Request.Builder()
-                .url(BASE_URL + "/users/" + userId)
-                .get()
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                callback.onError(e);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String responseData = response.body().string();
-                    JSONObject jsonResponse = new JSONObject(responseData);
-                    JSONObject jsonUser = jsonResponse.getJSONObject("user");
-
-                    User user = new User();
-                    user.setId(jsonUser.getString("id"));
-                    user.setName(jsonUser.getString("name"));
-                    user.setEmail(jsonUser.getString("email"));
-                    user.setAvatarUrl(jsonUser.getString("avatarUrl"));
-                    user.setBio(jsonUser.getString("bio"));
-                    user.setJoinDate(new Date(jsonUser.getLong("joinDate")));
-                    user.setCoursesCount(jsonUser.getInt("coursesCount"));
-                    user.setPostsCount(jsonUser.getInt("postsCount"));
-                    user.setLikesReceived(jsonUser.getInt("likesReceived"));
-
-                    callback.onSuccess(user);
-                } catch (Exception e) {
-                    callback.onError(e);
-                }
-            }
-        });
-    }
-     */
-
     // 获取用户发布的帖子
     public static void getUserPosts(String userId, ApiCallback<List<Post>> callback) {
         Request request = new Request.Builder()
@@ -829,6 +860,7 @@ public class ApiClient {
                         post.setUserId(jsonPost.getString("userId"));
                         post.setUserName(jsonPost.getString("userName"));
                         post.setUserAvatarUrl(jsonPost.getString("userAvatarUrl"));
+                        post.setUserAvatarVersion(jsonPost.getLong("userAvatarVersion"));
                         post.setCreatedAt(new Date(jsonPost.getLong("createdAt")));
                         post.setLikeCount(jsonPost.getInt("likeCount"));
                         post.setCommentCount(jsonPost.getInt("commentCount"));

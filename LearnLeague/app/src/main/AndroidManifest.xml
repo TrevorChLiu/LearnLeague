@@ -18,6 +18,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ProfileJumpHelperActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
@@ -29,29 +32,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".NewPostActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
-
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".PostDetailActivity"
             android:exported="false" />
-
         <activity
             android:name=".YouTubeActivity"
             android:exported="true"
             android:label="Youtube Link Input"
             android:theme="@style/Theme.LearnLeague" />
-
         <activity
             android:name=".YouTubePlayerActivity"
             android:exported="true"
             android:label="Play Youtube Video"
             android:theme="@style/Theme.LearnLeague" />
-
-
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ public class Post {
     private String userId;
     private String userName;
     private String userAvatarUrl;
+    private long userAvatarVersion;
     private Date createdAt;
     private int likeCount;
     private int commentCount;
@@ -20,13 +21,14 @@ public class Post {
 
     // 带参数的构造函数
     public Post(String id, String title, String content, String userId, String userName,
-                String userAvatarUrl, Date createdAt) {
+                String userAvatarUrl, long userAvatarVersion, Date createdAt) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.userId = userId;
         this.userName = userName;
         this.userAvatarUrl = userAvatarUrl;
+        this.userAvatarVersion = userAvatarVersion;
         this.createdAt = createdAt;
         this.likeCount = 0;
         this.commentCount = 0;
@@ -36,6 +38,14 @@ public class Post {
     // Getters and Setters
     public String getId() {
         return id;
+    }
+
+    public void setUserAvatarVersion(long userAvatarVersion) {
+        this.userAvatarVersion = userAvatarVersion;
+    }
+
+    public long getUserAvatarVersion() {
+        return userAvatarVersion;
     }
 
     public void setId(String id) {

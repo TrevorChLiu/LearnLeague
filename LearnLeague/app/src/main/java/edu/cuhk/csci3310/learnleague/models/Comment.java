@@ -9,6 +9,7 @@ public class Comment {
     private String userId;
     private String userName;
     private String userAvatarUrl;
+    private long userAvatarVersion;
     private Date createdAt;
     private int likeCount;
     private boolean isLikedByCurrentUser;
@@ -20,17 +21,26 @@ public class Comment {
 
     // 带参数的构造函数
     public Comment(String id, String postId, String content, String userId, String userName,
-                   String userAvatarUrl, Date createdAt, String parentCommentId) {
+                   String userAvatarUrl, Long userAvatarVersion, Date createdAt, String parentCommentId) {
         this.id = id;
         this.postId = postId;
         this.content = content;
         this.userId = userId;
         this.userName = userName;
         this.userAvatarUrl = userAvatarUrl;
+        this.userAvatarVersion = userAvatarVersion;
         this.createdAt = createdAt;
         this.likeCount = 0;
         this.isLikedByCurrentUser = false;
         this.parentCommentId = parentCommentId;
+    }
+
+    public void setUserAvatarVersion(long userAvatarVersion) {
+        this.userAvatarVersion = userAvatarVersion;
+    }
+
+    public long getUserAvatarVersion() {
+        return userAvatarVersion;
     }
 
     // Getters and Setters

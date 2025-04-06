@@ -90,7 +90,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
         User mUser = mUsersList.get(position);
 
         Glide.with(context)
-                .load("http://192.168.31.41:5000/get_avatar/" + mUser.getUserID())
+                .load(ApiClient.BASE_URL + "/get_avatar/" + mUser.getUserID())
                 .placeholder(R.drawable.default_avatar)
                 .signature(new ObjectKey(mUser.getAvatarVersion()))
                 .into(holder.avatarView);

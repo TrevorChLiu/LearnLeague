@@ -206,7 +206,7 @@ public class ProfileOtherFragment extends Fragment {
             avatar.setImageBitmap(owner.getAvatar());
         }*/
         Glide.with(getActivity())
-                .load("http://192.168.31.41:5000/get_avatar/" + owner.getUserID())
+                .load(ApiClient.BASE_URL + "/get_avatar/" + owner.getUserID())
                 .placeholder(R.drawable.default_avatar)
                 .signature(new ObjectKey(owner.getAvatarVersion()))
                 .into(avatar);

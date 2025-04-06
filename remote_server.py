@@ -216,6 +216,22 @@ def update_user():
     rows_affected = cursor.rowcount
     cursor.close()
     conx.close()
+
+    db = load_db()
+    posts = db.get("posts")
+    for post in posts:
+        if post.get('userId') == user_id:
+            post['userName'] = username
+            post['userAvatarVersion'] = avatar_version
+
+    comments = db.get("comments")
+    for comment in comments:
+        if comment.get('userId') == user_id:
+            comment['userName'] = username
+            comment['userAvatarVersion'] = avatar_version
+    
+    save_db(db)
+
     return f"User information updated, {rows_affected} rows are affected."    
 
     
@@ -471,7 +487,7 @@ def handle_posts():
 
     if request.method == 'GET':
         # get post list
-        posts = db_data.get('posts', [])
+        posts = list(reversed(db_data.get('posts', [])))
         user_id = request.args.get('userId')
 
         if user_id:
@@ -484,6 +500,10 @@ def handle_posts():
     elif request.method == 'POST':
         # create new posts
         data = request.json
+        user_id = data.get("userId")
+        username = data.get("username")
+        user_avatar_url = data.get("userAvatarUrl")
+        user_avatar_version = data.get("userAvatarVersion")
         title = data.get('title')
         content = data.get('content')
 
@@ -492,9 +512,10 @@ def handle_posts():
             "id": f"post{int(datetime.now().timestamp() * 1000)}",
             "title": title,
             "content": content,
-            "userId": "user1",  # assume it's post by 1st usr
-            "userName": "Alice Chen",
-            "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+            "userId": user_id,  # assume it's post by 1st usr
+            "userName": username,
+            "userAvatarUrl": user_avatar_url,
+            "userAvatarVersion": user_avatar_version,
             "createdAt": int(datetime.now().timestamp() * 1000),
             "likeCount": 0,
             "commentCount": 0,
@@ -511,7 +532,7 @@ def handle_posts():
 @app.route('/posts/<post_id>', methods=['GET'])
 def get_post(post_id):
     db_data = load_db()
-    posts = db_data.get('posts', [])
+    posts = reversed(db_data.get('posts', []))
 
     post = next((p for p in posts if p.get('id') == post_id), None)
 
@@ -524,7 +545,7 @@ def get_post(post_id):
 @app.route('/posts/<post_id>/comments', methods=['GET'])
 def get_post_comments(post_id):
     db_data = load_db()
-    comments = db_data.get('comments', [])
+    comments = list(reversed(db_data.get('comments', [])))
 
     post_comments = [c for c in comments if c.get('postId') == post_id]
 
@@ -584,6 +605,13 @@ def create_comment():
     post_id = data.get('postId')
     content = data.get('content')
     parent_comment_id = data.get('parentCommentId')
+    
+    user_id = data.get("userId")
+    username = data.get("username")
+    user_avatar_url = data.get("userAvatarUrl")
+    user_avatar_version = data.get("userAvatarVersion")
+    
+    
 
     # get posts
     post = next((p for p in db_data.get('posts', []) if p.get('id') == post_id), None)
@@ -595,9 +623,10 @@ def create_comment():
         "id": f"comment{int(datetime.now().timestamp() * 1000)}",
         "postId": post_id,
         "content": content,
-        "userId": "user1",  # assume 1st user's posts
-        "userName": "Alice Chen",
-        "userAvatarUrl": "https://i.pravatar.cc/150?img=1",
+        "userId": user_id,
+        "userName": username,
+        "userAvatarUrl": user_avatar_url,
+        "userAvatarVersion": user_avatar_version,
         "createdAt": int(datetime.now().timestamp() * 1000),
         "likeCount": 0,
         "isLikedByCurrentUser": False
@@ -616,20 +645,6 @@ def create_comment():
 
     return jsonify({"comment": new_comment})
 
-'''
-# get user info
-@app.route('/users/<user_id>', methods=['GET'])
-def get_user(user_id):
-    db_data = load_db()
-    users = db_data.get('users', [])
-
-    user = next((u for u in users if u.get('id') == user_id), None)
-
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-
-    return jsonify({"user": user})
-'''
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

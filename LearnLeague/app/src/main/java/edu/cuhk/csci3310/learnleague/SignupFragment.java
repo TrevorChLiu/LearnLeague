@@ -116,7 +116,7 @@ public class SignupFragment extends Fragment {
                         toastText.setText("Oops! This account ID has already been registered or is empty. Try another or log in if this is your account.");
                         toast.show();
                     } else {
-                        User.initUser(strID, new OnCurrentUserLoadedListener() {
+                        User.initUser(strID, new OnSingleUserLoadedListener() {
                             @Override
                             public void onLoaded(User user) {
                                 startActivity(new Intent(getActivity(), MainActivity.class));

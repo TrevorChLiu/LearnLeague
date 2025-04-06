@@ -231,7 +231,7 @@ public class ProfileMainFragment extends Fragment {
         followers.setText(owner.getNumFollowers() + " Followers");
 
         Glide.with(getActivity())
-                .load("http://192.168.31.41:5000/get_avatar/" + User.getCurrentUser().getUserID())
+                .load(ApiClient.BASE_URL + "/get_avatar/" + User.getCurrentUser().getUserID())
                 .placeholder(R.drawable.default_avatar)
                 .signature(new ObjectKey(User.getCurrentUser().getAvatarVersion()))
                 .into(avatar);
