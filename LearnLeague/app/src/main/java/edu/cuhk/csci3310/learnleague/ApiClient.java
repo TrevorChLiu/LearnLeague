@@ -17,7 +17,8 @@ import edu.cuhk.csci3310.learnleague.models.User;
  */
 public class ApiClient {
     // remote server's address
-    private static final String BASE_URL = "http://10.0.2.2:5000";
+    private static final String BASE_URL = "http://10.0.2.2:3000";
+    // private static final String BASE_URL = "http://10.0.2.2:3000";
     private static final OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -444,7 +445,6 @@ public class ApiClient {
                         post.setLikedByCurrentUser(jsonPost.getBoolean("isLikedByCurrentUser"));
                         posts.add(post);
                     }
-
                     callback.onSuccess(posts);
                 } catch (Exception e) {
                     callback.onError(e);

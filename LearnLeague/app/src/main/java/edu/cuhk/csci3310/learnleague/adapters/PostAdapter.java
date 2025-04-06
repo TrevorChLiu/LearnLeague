@@ -25,6 +25,7 @@ import edu.cuhk.csci3310.learnleague.R;
 import edu.cuhk.csci3310.learnleague.UserProfileActivity;
 import edu.cuhk.csci3310.learnleague.models.Post;
 
+import android.widget.ImageButton;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private Context context;
@@ -145,7 +146,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public static class PostViewHolder extends RecyclerView.ViewHolder {
         CircleImageView userAvatar;
         TextView userName, postTime, postTitle, postContent;
-        Button likeButton, commentButton, viewProfileButton;
+        Button likeButton, commentButton;  // 这两个是正常的Button
+        ImageButton viewProfileButton;     // 这个是ImageButton
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
