@@ -9,15 +9,15 @@
     <color name="light_gray">#cbd5e0</color>
     <color name="middle_cyan">#155e75</color>
 
-    - **$cyan-100:** #cffafe
-    - **$cyan-200:** #a5f3fc
-    - **$cyan-300:** #67e8f9
-    - **$cyan-400:** #22d3ee
-    - **$cyan-500:** #06b6d4
-    - **$cyan-600:** #0891b2
-    - **$cyan-700:** #0e7490
-    - **$cyan-800:** #155e75
-    - **$cyan-900:** #164e63
+    <color name="colorPrimary">#FF6200EE</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#03A9F4</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorText">#333333</color>
+    <color name="colorTextLight">#757575</color>
+    <color name="colorTextHint">#BDBDBD</color>
+    <color name="colorDivider">#DDDDDD</color>
+    <color name="colorLiked">#E91E63</color>
 
 
 </resources>
