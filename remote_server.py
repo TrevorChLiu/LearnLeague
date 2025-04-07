@@ -773,9 +773,16 @@ if __name__ == '__main__':
             pass
         if "reset" in sys.argv:
             drop_all_tables()
+            save_db({"posts": [], "comments": [], "users":{}})
+            print("Dropped json database")
         if "demo" in sys.argv:
             users = ["Alan", "Bob", "Charlie", "Delta", "Eve","Fiona", "Trev", "Somebody", "Mia", "Hunter", "Lester"]
             
+            # json db demo
+            file_path = 'demo_json/demo_db.json'
+            with open(file_path, 'r') as file:
+                demo_json = json.load(file)
+            save_db(demo_json)
 
             conx = get_db_connection()
             cursor = conx.cursor()
