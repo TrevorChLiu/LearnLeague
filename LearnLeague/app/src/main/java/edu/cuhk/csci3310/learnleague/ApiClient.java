@@ -874,5 +874,99 @@ public class ApiClient {
             }
         });
     }
+
+    public static void getUserComments(String userId, ApiCallback<List<Comment>> callback) {
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/users/" + userId + "/comments")
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String responseData = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseData);
+                    JSONArray jsonComments = jsonResponse.getJSONArray("comments");
+                    List<Comment> comments = new ArrayList<>();
+
+                    for (int i = 0; i < jsonComments.length(); i++) {
+                        JSONObject jsonComment = jsonComments.getJSONObject(i);
+                        Comment comment = new Comment();
+                        comment.setId(jsonComment.getString("id"));
+                        comment.setPostId(jsonComment.getString("postId"));
+                        comment.setContent(jsonComment.getString("content"));
+                        comment.setUserId(jsonComment.getString("userId"));
+                        comment.setUserName(jsonComment.getString("userName"));
+                        comment.setUserAvatarUrl(jsonComment.getString("userAvatarUrl"));
+                        comment.setUserAvatarVersion(jsonComment.getLong("userAvatarVersion"));
+                        comment.setCreatedAt(new Date(jsonComment.getLong("createdAt")));
+                        comment.setLikeCount(jsonComment.getInt("likeCount"));
+                        comment.setLikedByCurrentUser(jsonComment.getBoolean("isLikedByCurrentUser"));
+                        if (!jsonComment.isNull("parentCommentId")) {
+                            comment.setParentCommentId(jsonComment.getString("parentCommentId"));
+                        }
+                        comments.add(comment);
+                    }
+
+                    callback.onSuccess(comments);
+                } catch (Exception e) {
+                    callback.onError(e);
+                }
+            }
+        });
+    }
+
+    public static void getUserReplies(String userId, ApiCallback<List<Comment>> callback) {
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/users/" + userId + "/replies")
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String responseData = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseData);
+                    JSONArray jsonComments = jsonResponse.getJSONArray("replies");
+                    List<Comment> comments = new ArrayList<>();
+
+                    for (int i = 0; i < jsonComments.length(); i++) {
+                        JSONObject jsonComment = jsonComments.getJSONObject(i);
+                        Comment comment = new Comment();
+                        comment.setId(jsonComment.getString("id"));
+                        comment.setPostId(jsonComment.getString("postId"));
+                        comment.setContent(jsonComment.getString("content"));
+                        comment.setUserId(jsonComment.getString("userId"));
+                        comment.setUserName(jsonComment.getString("userName"));
+                        comment.setUserAvatarUrl(jsonComment.getString("userAvatarUrl"));
+                        comment.setUserAvatarVersion(jsonComment.getLong("userAvatarVersion"));
+                        comment.setCreatedAt(new Date(jsonComment.getLong("createdAt")));
+                        comment.setLikeCount(jsonComment.getInt("likeCount"));
+                        comment.setLikedByCurrentUser(jsonComment.getBoolean("isLikedByCurrentUser"));
+                        if (!jsonComment.isNull("parentCommentId")) {
+                            comment.setParentCommentId(jsonComment.getString("parentCommentId"));
+                        }
+                        comments.add(comment);
+                    }
+
+                    callback.onSuccess(comments);
+                } catch (Exception e) {
+                    callback.onError(e);
+                }
+            }
+        });
+    }
 }
 

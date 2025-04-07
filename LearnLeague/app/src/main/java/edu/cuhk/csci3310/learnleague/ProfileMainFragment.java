@@ -91,7 +91,7 @@ public class ProfileMainFragment extends Fragment {
         // Create the nav tab layout for this page
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager2 = view.findViewById(R.id.viewPager2);
-        profileViewPagerAdapter = new ProfileViewPagerAdapter(this);
+        profileViewPagerAdapter = new ProfileViewPagerAdapter(this, User.getCurrentUser().getUserID());
         viewPager2.setAdapter(profileViewPagerAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

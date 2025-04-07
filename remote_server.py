@@ -528,6 +528,56 @@ def handle_posts():
 
         return jsonify({"post": new_post})
 
+@app.route('/users/<user_id>/posts', methods=['GET'])
+def get_user_posts(user_id):
+    db_data = load_db()
+    posts = reversed(db_data.get('posts', []))
+
+    user_posts = [post for post in posts if post.get('userId') == user_id]
+        
+    if not user_posts:
+        return jsonify({"error": "Post not found"}), 404
+
+    return jsonify({"posts": user_posts})
+
+@app.route('/users/<user_id>/comments', methods=['GET'])
+def get_user_comments(user_id):
+    db_data = load_db()
+    comments = reversed(db_data.get('comments', []))
+
+    user_comments  = [comment for comment in comments if comment.get('userId') == user_id]
+
+    if not user_comments:
+        return jsonify({"error": "Post not found"}), 404
+
+    return jsonify({"comments": user_comments})
+
+@app.route('/users/<user_id>/replies', methods=['GET'])
+def get_user_replies(user_id):
+    db_data = load_db()
+    posts = reversed(db_data.get('posts', []))
+    comments = reversed(db_data.get('comments', []))
+
+    user_post_ids = [post.get('id') for post in posts if post.get('userId') == user_id]
+    user_replies  = [comment for comment in comments if comment.get('postId') in user_post_ids]
+
+    if not user_replies:
+        return jsonify({"error": "Post not found"}), 404
+
+    return jsonify({"replies": user_replies})
+
+@app.route('/users/<user_id>/comments', methods=['GET'])
+def get_user_post(user_id):
+    db_data = load_db()
+    posts = db_data.get('posts', [])
+
+    user_posts = [post for post in posts if post.get('userId') == user_id]
+        
+    if not user_posts:
+        return jsonify({"error": "Post not found"}), 404
+
+    return jsonify({"posts": user_posts})
+
 # get detailed post info
 @app.route('/posts/<post_id>', methods=['GET'])
 def get_post(post_id):

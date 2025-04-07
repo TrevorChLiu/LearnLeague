@@ -1,12 +1,22 @@
 package edu.cuhk.csci3310.learnleague;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.cuhk.csci3310.learnleague.adapters.CommentAdapter;
+import edu.cuhk.csci3310.learnleague.models.Comment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,8 +34,17 @@ public class RepliesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private RecyclerView commentsRecyclerView;
+    private CommentAdapter commentAdapter;
+    private List<Comment> commentList = new ArrayList<>();
+    private String userID;
+
     public RepliesFragment() {
         // Required empty public constructor
+    }
+
+    public RepliesFragment(String userID) {
+        this.userID = userID;
     }
 
     /**
@@ -59,6 +78,49 @@ public class RepliesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_replies, container, false);
+        View view = inflater.inflate(R.layout.fragment_replies, container, false);
+
+        commentsRecyclerView = view.findViewById(R.id.recycler_view);
+
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        commentAdapter = new CommentAdapter(getContext(), commentList, new CommentAdapter.OnReplyClickListener() {
+            @Override
+            public void onReplyClick(Comment comment) {
+                Intent intent = new Intent(getContext(), PostDetailActivity.class);
+                intent.putExtra("POST_ID", comment.getPostId());
+                getActivity().startActivity(intent);
+            }
+        });
+        commentsRecyclerView.setAdapter(commentAdapter);
+
+        loadComments();
+
+        return view;
+
+
+    }
+
+    private void loadComments() {
+        ApiClient.getUserReplies(userID, new ApiClient.ApiCallback<List<Comment>>() {
+            @Override
+            public void onSuccess(List<Comment> result) {
+                getActivity().runOnUiThread(() -> {
+                    commentList.clear();
+                    commentList.addAll(result);
+                    commentAdapter.notifyDataSetChanged();
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                /*
+                e.printStackTrace();
+                getActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Failed to load comments: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+                */
+                // Do nothing
+            }
+        });
     }
 }

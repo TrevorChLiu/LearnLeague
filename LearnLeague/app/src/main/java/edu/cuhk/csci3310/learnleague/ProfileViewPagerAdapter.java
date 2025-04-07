@@ -6,18 +6,21 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class ProfileViewPagerAdapter extends FragmentStateAdapter {
 
-    public ProfileViewPagerAdapter(@NonNull Fragment fragment) {
+    private String userID;
+
+    public ProfileViewPagerAdapter(@NonNull Fragment fragment, String userID) {
         super(fragment);
+        this.userID = userID;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0: return new PostsFragment();
-            case 1: return new CommentsFragment();
-            case 2: return new RepliesFragment();
-            default: return new PostsFragment();
+            case 0: return new PostsFragment(userID);
+            case 1: return new CommentsFragment(userID);
+            case 2: return new RepliesFragment(userID);
+            default: return new PostsFragment(userID);
         }
     }
 

@@ -3,10 +3,19 @@ package edu.cuhk.csci3310.learnleague;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.cuhk.csci3310.learnleague.adapters.PostAdapter;
+import edu.cuhk.csci3310.learnleague.models.Post;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,8 +33,17 @@ public class PostsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private PostAdapter postAdapter;
+    private List<Post> postList = new ArrayList<>();
+    private RecyclerView postsRecyclerView;
+    private String userID;
+
     public PostsFragment() {
         // Required empty public constructor
+    }
+
+    public PostsFragment(String userID) {
+        this.userID = userID;
     }
 
     /**
@@ -59,6 +77,47 @@ public class PostsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_posts, container, false);
+        View view = inflater.inflate(R.layout.fragment_posts, container, false);
+
+        postsRecyclerView = view.findViewById(R.id.recycler_view);
+
+        postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        postAdapter = new PostAdapter(getContext(), postList, false);
+        postsRecyclerView.setAdapter(postAdapter);
+
+        loadPosts();
+
+        return view;
     }
+
+    private void loadPosts() {
+        ApiClient.getUserPosts(userID, new ApiClient.ApiCallback<List<Post>>() {
+            @Override
+            public void onSuccess(List<Post> result) {
+                // 需要在主线程中更新UI
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        postList.clear();
+                        postList.addAll(result);
+                        postAdapter.notifyDataSetChanged();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                /*
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Failed to fetch posts: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+                 */
+                // Do nothing
+            }
+        });
+    }
+
+
 }
