@@ -1,204 +1,61 @@
 {
   "posts": [
     {
-      "id": "post1743962937704",
-      "title": "Hello every one",
-      "content": "I a Trev",
+      "id": "post1744020562681",
+      "title": "Omg",
+      "content": "test",
       "userId": "Trev",
-      "userName": "TrevNoO",
+      "userName": "Trev106",
       "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
-      "userAvatarVersion": 1743966169921,
-      "createdAt": 1743962937704,
-      "likeCount": 1,
-      "commentCount": 0,
-      "isLikedByCurrentUser": true
-    },
-    {
-      "id": "post1743964038147",
-      "title": "Lets test this",
-      "content": "Testing",
-      "userId": "Trev",
-      "userName": "TrevNoO",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
-      "userAvatarVersion": 1743966169921,
-      "createdAt": 1743964038147,
-      "likeCount": 1,
-      "commentCount": 5,
-      "isLikedByCurrentUser": true
-    },
-    {
-      "id": "post1743966861253",
-      "title": "No way",
-      "content": "?",
-      "userId": "Trev",
-      "userName": "TrevNoO",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
-      "userAvatarVersion": 1743966169921,
-      "createdAt": 1743966861253,
-      "likeCount": 0,
+      "userAvatarVersion": 1744016856,
+      "createdAt": 1744020562681,
+      "likeCount": 3,
       "commentCount": 1,
-      "isLikedByCurrentUser": false
-    },
-    {
-      "id": "post1743998421385",
-      "title": "Hi Hi Hi",
-      "content": "Yeah!",
-      "userId": "Fiona",
-      "userName": "Fiona105",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Fiona",
-      "userAvatarVersion": 1743949391,
-      "createdAt": 1743998421385,
-      "likeCount": 0,
-      "commentCount": 1,
-      "isLikedByCurrentUser": false
-    },
-    {
-      "id": "post1743998437168",
-      "title": "Hello!",
-      "content": "Nice day",
-      "userId": "Fiona",
-      "userName": "Fiona105",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Fiona",
-      "userAvatarVersion": 1743949391,
-      "createdAt": 1743998437168,
-      "likeCount": 0,
-      "commentCount": 1,
-      "isLikedByCurrentUser": false
+      "isLikedByCurrentUser": false,
+      "likeList": [
+        "Bob",
+        "Trev",
+        "Fiona"
+      ]
     }
   ],
   "comments": [
     {
-      "id": "comment1743965994130",
-      "postId": "post1743964038147",
-      "content": "Why?",
-      "userId": "Bob",
-      "userName": "Bob101",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Bob",
-      "userAvatarVersion": 1743949391,
-      "createdAt": 1743965994130,
-      "likeCount": 0,
-      "isLikedByCurrentUser": false
-    },
-    {
-      "id": "comment1743966131510",
-      "postId": "post1743964038147",
-      "content": "Yeah?",
+      "id": "comment1744021568374",
+      "postId": "post1744020562681",
+      "content": "Break i down agagin",
       "userId": "Trev",
-      "userName": "TrevNoO",
+      "userName": "Trev106",
       "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
-      "userAvatarVersion": 1743966169921,
-      "createdAt": 1743966131510,
-      "likeCount": 0,
+      "userAvatarVersion": 1744016856,
+      "createdAt": 1744021568374,
+      "likeCount": 2,
       "isLikedByCurrentUser": false,
-      "parentCommentId": "comment1743965994130"
-    },
-    {
-      "id": "comment1743966143701",
-      "postId": "post1743964038147",
-      "content": "Of course",
-      "userId": "Trev",
-      "userName": "TrevNoO",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
-      "userAvatarVersion": 1743966169921,
-      "createdAt": 1743966143701,
-      "likeCount": 1,
-      "isLikedByCurrentUser": true
-    },
-    {
-      "id": "comment1743966494867",
-      "postId": "post1743964038147",
-      "content": "no why",
-      "userId": "Trev",
-      "userName": "TrevNoO",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
-      "userAvatarVersion": 1743966169921,
-      "createdAt": 1743966494867,
-      "likeCount": 0,
-      "isLikedByCurrentUser": false,
-      "parentCommentId": "comment1743965994130"
-    },
-    {
-      "id": "comment1743966501910",
-      "postId": "post1743964038147",
-      "content": "ok",
-      "userId": "Trev",
-      "userName": "TrevNoO",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
-      "userAvatarVersion": 1743966169921,
-      "createdAt": 1743966501910,
-      "likeCount": 0,
-      "isLikedByCurrentUser": false
-    },
-    {
-      "id": "comment1743999185414",
-      "postId": "post1743966861253",
-      "content": "I love this platform",
-      "userId": "Fiona",
-      "userName": "Fiona105",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Fiona",
-      "userAvatarVersion": 1743949391,
-      "createdAt": 1743999185414,
-      "likeCount": 0,
-      "isLikedByCurrentUser": false
-    },
-    {
-      "id": "comment1743999860764",
-      "postId": "post1743998437168",
-      "content": "Congrats",
-      "userId": "Fiona",
-      "userName": "Fiona105",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Fiona",
-      "userAvatarVersion": 1743949391,
-      "createdAt": 1743999860764,
-      "likeCount": 0,
-      "isLikedByCurrentUser": false
-    },
-    {
-      "id": "comment1743999873827",
-      "postId": "post1743998421385",
-      "content": "why so happy",
-      "userId": "Fiona",
-      "userName": "Fiona105",
-      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Fiona",
-      "userAvatarVersion": 1743949391,
-      "createdAt": 1743999873827,
-      "likeCount": 0,
-      "isLikedByCurrentUser": false
+      "likeList": [
+        "Trev",
+        "Fiona"
+      ]
     }
   ],
   "users": {
-    "Bob": {
-      "Stanford CS330 Deep Multi-Task & Meta Learning - What is multi-task learning? I 2022 I Lecture 1": {
-        "title": "Stanford CS330 Deep Multi-Task & Meta Learning - What is multi-task learning? I 2022 I Lecture 1",
-        "thumbnailUrl": "https://i.ytimg.com/vi/bkVCAk9Nsss/mqdefault.jpg",
-        "watchTimeInSeconds": 198,
-        "videoUrl": "https://youtu.be/bkVCAk9Nsss?si=jAgkxAgHXkCWUgt0"
-      }
-    },
     "Trev": {
+      "#00 - Course Overview & Logistics (CMU Intro to Database Systems)": {
+        "title": "#00 - Course Overview & Logistics (CMU Intro to Database Systems)",
+        "thumbnailUrl": "https://i.ytimg.com/vi/otE2WvX3XdQ/mqdefault.jpg",
+        "watchTimeInSeconds": 0,
+        "videoUrl": "https://youtu.be/otE2WvX3XdQ?si=cKbDuqjG7SLRW_hx"
+      },
+      "Discrete Math - 1.1.1 Propositions, Negations, Conjunctions and Disjunctions": {
+        "title": "Discrete Math - 1.1.1 Propositions, Negations, Conjunctions and Disjunctions",
+        "thumbnailUrl": "https://i.ytimg.com/vi/A3Ffwsnad0k/mqdefault.jpg",
+        "watchTimeInSeconds": 0,
+        "videoUrl": "https://youtu.be/A3Ffwsnad0k?si=rrkiJdp89Iuk7_jC"
+      },
       "Lec 1 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
         "title": "Lec 1 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
         "thumbnailUrl": "https://i.ytimg.com/vi/L3LMbpZIKhQ/mqdefault.jpg",
         "watchTimeInSeconds": 0,
-        "videoUrl": "https://youtu.be/L3LMbpZIKhQ?si=70zaY8jzDlo8fxlu"
-      },
-      "Lec 2 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
-        "title": "Lec 2 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
-        "thumbnailUrl": "https://i.ytimg.com/vi/z8HKWUWS-lA/mqdefault.jpg",
-        "watchTimeInSeconds": 0,
-        "videoUrl": "https://youtu.be/z8HKWUWS-lA?si=b62fqSZGLPG3tY4f"
-      },
-      "Lec 3 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
-        "title": "Lec 3 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
-        "thumbnailUrl": "https://i.ytimg.com/vi/NuGDkmwEObM/mqdefault.jpg",
-        "watchTimeInSeconds": 0,
-        "videoUrl": "https://youtu.be/NuGDkmwEObM?si=oKr9QQUXtboUJHd2"
-      },
-      "Lec 4 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
-        "title": "Lec 4 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
-        "thumbnailUrl": "https://i.ytimg.com/vi/NuY7szYSXSw/mqdefault.jpg",
-        "watchTimeInSeconds": 0,
-        "videoUrl": "https://youtu.be/NuY7szYSXSw?si=iLBh7TBt8uACtxSM"
+        "videoUrl": "https://youtu.be/L3LMbpZIKhQ?si=4pgFWTeRRpTKlE3m"
       }
     }
   }

@@ -365,7 +365,7 @@ def drop_all_tables():
 def update_avatar(user_id):
     try:
         # Get the raw binary data from the request body
-        avatar_data = request.data 
+        avatar_data = request.json
 
         if not avatar_data:
             return 'Avatar not provided!', 400
@@ -479,6 +479,12 @@ def save_db(db_data):
     with open('db.json', 'w') as file:
         json.dump(db_data, indent=2, fp=file)
 
+def get_posts_or_comments(userId, type, db_data):
+    data = list(reversed(db_data.get(type, [])))
+    for i in range(len(data)):
+        data[i]["isLikedByCurrentUser"] = userId in data[i]["likeList"]
+    
+    return data
 
 # get post list
 @app.route('/posts', methods=['GET', 'POST'])
@@ -487,7 +493,8 @@ def handle_posts():
 
     if request.method == 'GET':
         # get post list
-        posts = list(reversed(db_data.get('posts', [])))
+        current_user_id = request.args.get('currentUserId')
+        posts = get_posts_or_comments(current_user_id, "posts", db_data)
         user_id = request.args.get('userId')
 
         if user_id:
@@ -519,7 +526,8 @@ def handle_posts():
             "createdAt": int(datetime.now().timestamp() * 1000),
             "likeCount": 0,
             "commentCount": 0,
-            "isLikedByCurrentUser": False
+            "isLikedByCurrentUser": None, # initially not defined
+            "likeList":[]
         }
 
         # add to database
@@ -528,10 +536,13 @@ def handle_posts():
 
         return jsonify({"post": new_post})
 
+
+
 @app.route('/users/<user_id>/posts', methods=['GET'])
 def get_user_posts(user_id):
     db_data = load_db()
-    posts = reversed(db_data.get('posts', []))
+    current_user_id = request.args.get('currentUserId', db_data)
+    posts = get_posts_or_comments(current_user_id, "posts", db_data)
 
     user_posts = [post for post in posts if post.get('userId') == user_id]
         
@@ -543,7 +554,9 @@ def get_user_posts(user_id):
 @app.route('/users/<user_id>/comments', methods=['GET'])
 def get_user_comments(user_id):
     db_data = load_db()
-    comments = reversed(db_data.get('comments', []))
+
+    current_user_id = request.args.get('currentUserId')
+    comments = get_posts_or_comments(current_user_id, "comments", db_data)
 
     user_comments  = [comment for comment in comments if comment.get('userId') == user_id]
 
@@ -555,8 +568,10 @@ def get_user_comments(user_id):
 @app.route('/users/<user_id>/replies', methods=['GET'])
 def get_user_replies(user_id):
     db_data = load_db()
-    posts = reversed(db_data.get('posts', []))
-    comments = reversed(db_data.get('comments', []))
+
+    current_user_id = request.args.get('currentUserId')
+    posts = get_posts_or_comments(current_user_id, "posts", db_data)
+    comments = get_posts_or_comments(current_user_id, "comments", db_data)
 
     user_post_ids = [post.get('id') for post in posts if post.get('userId') == user_id]
     user_replies  = [comment for comment in comments if comment.get('postId') in user_post_ids]
@@ -566,23 +581,13 @@ def get_user_replies(user_id):
 
     return jsonify({"replies": user_replies})
 
-@app.route('/users/<user_id>/comments', methods=['GET'])
-def get_user_post(user_id):
-    db_data = load_db()
-    posts = db_data.get('posts', [])
-
-    user_posts = [post for post in posts if post.get('userId') == user_id]
-        
-    if not user_posts:
-        return jsonify({"error": "Post not found"}), 404
-
-    return jsonify({"posts": user_posts})
 
 # get detailed post info
 @app.route('/posts/<post_id>', methods=['GET'])
 def get_post(post_id):
     db_data = load_db()
-    posts = reversed(db_data.get('posts', []))
+    current_user_id = request.args.get('currentUserId')
+    posts = get_posts_or_comments(current_user_id, "posts", db_data)
 
     post = next((p for p in posts if p.get('id') == post_id), None)
 
@@ -595,7 +600,9 @@ def get_post(post_id):
 @app.route('/posts/<post_id>/comments', methods=['GET'])
 def get_post_comments(post_id):
     db_data = load_db()
-    comments = list(reversed(db_data.get('comments', [])))
+
+    current_user_id = request.args.get('currentUserId')
+    comments = get_posts_or_comments(current_user_id, "comments", db_data)
 
     post_comments = [c for c in comments if c.get('postId') == post_id]
 
@@ -605,47 +612,66 @@ def get_post_comments(post_id):
 @app.route('/posts/<post_id>/like', methods=['POST'])
 def like_post(post_id):
     db_data = load_db()
-    posts = db_data.get('posts', [])
+    
+    data = request.json
+    user_id = data.get('userId')
+    posts = get_posts_or_comments(user_id, "posts", db_data)
 
     post = next((p for p in posts if p.get('id') == post_id), None)
 
     if not post:
         return jsonify({"error": "Post not found"}), 404
 
-    current_like_state = post.get('isLikedByCurrentUser', False)
-    post['isLikedByCurrentUser'] = not current_like_state
-
-    if current_like_state:
-        post['likeCount'] = max(0, post['likeCount'] - 1)
+    # current_like_state = post.get('isLikedByCurrentUser', False)
+    # post['isLikedByCurrentUser'] = not current_like_state
+    like_list = post.get('likeList')
+    if like_list is None:
+        like_list = []
+        post['likeList'] = like_list
+    
+    if user_id not in like_list:
+        like_list.append(user_id)
     else:
-        post['likeCount'] += 1
+        like_list.remove(user_id)
+
+    post['likeCount'] = len(like_list)
 
     save_db(db_data)
 
-    return jsonify({"isLiked": post['isLikedByCurrentUser']})
+    return jsonify({"isLiked": user_id in like_list})
 
 # deal with comment likes
 @app.route('/comments/<comment_id>/like', methods=['POST'])
 def like_comment(comment_id):
     db_data = load_db()
-    comments = db_data.get('comments', [])
+
+    data = request.json
+    user_id = data.get('userId')
+
+    comments = get_posts_or_comments(user_id, "comments", db_data)
 
     comment = next((c for c in comments if c.get('id') == comment_id), None)
 
     if not comment:
         return jsonify({"error": "Comment not found"}), 404
 
-    current_like_state = comment.get('isLikedByCurrentUser', False)
-    comment['isLikedByCurrentUser'] = not current_like_state
 
-    if current_like_state:
-        comment['likeCount'] = max(0, comment['likeCount'] - 1)
+    like_list = comment.get('likeList')
+    if like_list is None:
+        like_list = []
+        comment['likeList'] = like_list
+    
+    if user_id not in like_list:
+        like_list.append(user_id)
     else:
-        comment['likeCount'] += 1
+        like_list.remove(user_id)
 
+    comment['likeCount'] = len(like_list)
+    print(comment)
+    print(db_data)
     save_db(db_data)
 
-    return jsonify({"isLiked": comment['isLikedByCurrentUser']})
+    return jsonify({"isLiked": user_id in like_list})
 
 # handle create new comments
 @app.route('/comments', methods=['POST'])
@@ -679,7 +705,8 @@ def create_comment():
         "userAvatarVersion": user_avatar_version,
         "createdAt": int(datetime.now().timestamp() * 1000),
         "likeCount": 0,
-        "isLikedByCurrentUser": False
+        "isLikedByCurrentUser": None,
+        "likeList": []
     }
 
     if parent_comment_id:

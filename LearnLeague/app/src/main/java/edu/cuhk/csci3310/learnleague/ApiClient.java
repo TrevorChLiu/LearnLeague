@@ -509,8 +509,12 @@ public class ApiClient {
 
     // 获取帖子列表
     public static void getPosts(ApiCallback<List<Post>> callback) {
+        HttpUrl url = HttpUrl.parse(BASE_URL + "/posts").newBuilder()
+                .addQueryParameter("currentUserId", User.getCurrentUser().getUserID())
+                .build();
+
         Request request = new Request.Builder()
-                .url(BASE_URL + "/posts")
+                .url(url)
                 .get()
                 .build();
 
@@ -555,8 +559,12 @@ public class ApiClient {
 
     // get Post detail
     public static void getPostDetail(String postId, ApiCallback<Post> callback) {
+        HttpUrl url = HttpUrl.parse(BASE_URL + "/posts/" + postId).newBuilder()
+                .addQueryParameter("currentUserId", User.getCurrentUser().getUserID())
+                .build();
+
         Request request = new Request.Builder()
-                .url(BASE_URL + "/posts/" + postId)
+                .url(url)
                 .get()
                 .build();
 
@@ -650,8 +658,12 @@ public class ApiClient {
 
     // 获取帖子评论
     public static void getComments(String postId, ApiCallback<List<Comment>> callback) {
+        HttpUrl url = HttpUrl.parse(BASE_URL + "/posts/" + postId + "/comments").newBuilder()
+                .addQueryParameter("currentUserId", User.getCurrentUser().getUserID())
+                .build();
+
         Request request = new Request.Builder()
-                .url(BASE_URL + "/posts/" + postId + "/comments")
+                .url(url)
                 .get()
                 .build();
 
@@ -761,6 +773,7 @@ public class ApiClient {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("postId", postId);
+            jsonBody.put("userId", User.getCurrentUser().getUserID());
         } catch (Exception e) {
             callback.onError(e);
             return;
@@ -799,6 +812,7 @@ public class ApiClient {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("commentId", commentId);
+            jsonBody.put("userId", User.getCurrentUser().getUserID());
         } catch (Exception e) {
             callback.onError(e);
             return;
@@ -832,8 +846,12 @@ public class ApiClient {
 
     // 获取用户发布的帖子
     public static void getUserPosts(String userId, ApiCallback<List<Post>> callback) {
+        HttpUrl url = HttpUrl.parse(BASE_URL + "/users/" + userId + "/posts").newBuilder()
+                .addQueryParameter("currentUserId", User.getCurrentUser().getUserID())
+                .build();
+
         Request request = new Request.Builder()
-                .url(BASE_URL + "/users/" + userId + "/posts")
+                .url(url)
                 .get()
                 .build();
 
@@ -876,8 +894,12 @@ public class ApiClient {
     }
 
     public static void getUserComments(String userId, ApiCallback<List<Comment>> callback) {
+        HttpUrl url = HttpUrl.parse(BASE_URL + "/users/" + userId + "/comments").newBuilder()
+                .addQueryParameter("currentUserId", User.getCurrentUser().getUserID())
+                .build();
+
         Request request = new Request.Builder()
-                .url(BASE_URL + "/users/" + userId + "/comments")
+                .url(url)
                 .get()
                 .build();
 
@@ -923,8 +945,12 @@ public class ApiClient {
     }
 
     public static void getUserReplies(String userId, ApiCallback<List<Comment>> callback) {
+        HttpUrl url = HttpUrl.parse(BASE_URL + "/users/" + userId + "/replies").newBuilder()
+                .addQueryParameter("currentUserId", User.getCurrentUser().getUserID())
+                .build();
+
         Request request = new Request.Builder()
-                .url(BASE_URL + "/users/" + userId + "/replies")
+                .url(url)
                 .get()
                 .build();
 

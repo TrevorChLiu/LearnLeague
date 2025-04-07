@@ -91,23 +91,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
         return view;
     }
 
-    // demo 數據
-    private List<Course> initializeDemoData() {
-        List<Course> demoList = new ArrayList<>();
-        demoList.add(new Course(
-                "Algorithms and Computation",
-                "https://i.ytimg.com/vi/ZA-tUyM_y7s/default.jpg",
-                10890,
-                "https://youtu.be/otE2WvX3XdQ?si=cKbDuqjG7SLRW_hx"
-        ));
-        demoList.add(new Course(
-                "Discrete Math",
-                "https://i.ytimg.com/vi/A3Ffwsnad0k/default.jpg",
-                3456,
-                "https://youtu.be/A3Ffwsnad0k?si=rrkiJdp89Iuk7_jC"
-        ));
-        return demoList;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
