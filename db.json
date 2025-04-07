@@ -1,5 +1,200 @@
 {
-  "posts": [],
-  "comments": [],
-  "users": {}
+  "posts": [
+    {
+      "id": "post1744025639201",
+      "title": "How do I make a new post?",
+      "content": "Hello everyone, I'm new here. Could you please tell me how to make a new post? Thanks in advance!",
+      "userId": "Trev",
+      "userName": "Trev106",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744025639201,
+      "likeCount": 3,
+      "commentCount": 4,
+      "isLikedByCurrentUser": false,
+      "likeList": [
+        "Trev",
+        "Mia",
+        "Bob"
+      ]
+    },
+    {
+      "id": "post1744026594515",
+      "title": "What a nice platform!",
+      "content": "Wow! There is so much fun on this platform! I love it! Thank you, Group 7! Thank you so much!",
+      "userId": "Fiona",
+      "userName": "Fiona105",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Fiona",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744026594515,
+      "likeCount": 2,
+      "commentCount": 2,
+      "isLikedByCurrentUser": false,
+      "likeList": [
+        "Trev",
+        "Bob"
+      ]
+    },
+    {
+      "id": "post1744026927070",
+      "title": "Hahahahaha",
+      "content": "* **********\n** *********\n*** ********\n**** *******\n***** ******\n****** *****\n******* ****\n******** ***\n********* **\n********** *\n***********",
+      "userId": "Charlie",
+      "userName": "Charlie102",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Charlie",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744026927070,
+      "likeCount": 1,
+      "commentCount": 3,
+      "isLikedByCurrentUser": false,
+      "likeList": [
+        "Charlie"
+      ]
+    }
+  ],
+  "comments": [
+    {
+      "id": "comment1744025770553",
+      "postId": "post1744025639201",
+      "content": "Just press the + button below on the right and edit your content. Can't wait to see your post, buddy.",
+      "userId": "Mia",
+      "userName": "Mia108",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Mia",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744025770553,
+      "likeCount": 1,
+      "isLikedByCurrentUser": false,
+      "likeList": [
+        "Trev"
+      ]
+    },
+    {
+      "id": "comment1744025802864",
+      "postId": "post1744025639201",
+      "content": "@Mia Oh, thanks!",
+      "userId": "Trev",
+      "userName": "Trev106",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744025802865,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false,
+      "likeList": []
+    },
+    {
+      "id": "comment1744025965102",
+      "postId": "post1744025639201",
+      "content": "@Trev106 Hello guys, what are you talking about? May I join you?",
+      "userId": "Bob",
+      "userName": "Bob101",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Bob",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744025965102,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false,
+      "likeList": []
+    },
+    {
+      "id": "comment1744025992454",
+      "postId": "post1744025639201",
+      "content": "@Bob101 Of course, mate",
+      "userId": "Trev",
+      "userName": "Trev106",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744025992454,
+      "likeCount": 0,
+      "isLikedByCurrentUser": false,
+      "likeList": []
+    },
+    {
+      "id": "comment1744026630311",
+      "postId": "post1744026594515",
+      "content": "You're welcome, hahaha",
+      "userId": "Trev",
+      "userName": "Trev106",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Trev",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744026630311,
+      "likeCount": 1,
+      "isLikedByCurrentUser": false,
+      "likeList": [
+        "Bob"
+      ]
+    },
+    {
+      "id": "comment1744026701256",
+      "postId": "post1744026594515",
+      "content": "Yes, buddy, you're absolutely right. What an awesome app!",
+      "userId": "Bob",
+      "userName": "Bob101",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Bob",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744026701256,
+      "likeCount": 0,
+      "isLikedByCurrentUser": null,
+      "likeList": []
+    },
+    {
+      "id": "comment1744027133282",
+      "postId": "post1744026927070",
+      "content": "This is my new work",
+      "userId": "Charlie",
+      "userName": "Charlie102",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Charlie",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744027133282,
+      "likeCount": 0,
+      "isLikedByCurrentUser": null,
+      "likeList": []
+    },
+    {
+      "id": "comment1744027214567",
+      "postId": "post1744026927070",
+      "content": "OMG",
+      "userId": "Alan",
+      "userName": "Alan100",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Alan",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744027214567,
+      "likeCount": 0,
+      "isLikedByCurrentUser": null,
+      "likeList": []
+    },
+    {
+      "id": "comment1744027221853",
+      "postId": "post1744026927070",
+      "content": "Incredible",
+      "userId": "Alan",
+      "userName": "Alan100",
+      "userAvatarUrl": "http://192.168.31.41:5000/get_avatar/Alan",
+      "userAvatarVersion": 1744025238,
+      "createdAt": 1744027221853,
+      "likeCount": 0,
+      "isLikedByCurrentUser": null,
+      "likeList": []
+    }
+  ],
+  "users": {
+    "Trev": {
+      "#00 - Course Overview & Logistics (CMU Intro to Database Systems)": {
+        "title": "#00 - Course Overview & Logistics (CMU Intro to Database Systems)",
+        "thumbnailUrl": "https://i.ytimg.com/vi/otE2WvX3XdQ/mqdefault.jpg",
+        "watchTimeInSeconds": 3000,
+        "videoUrl": "https://youtu.be/otE2WvX3XdQ?si=cKbDuqjG7SLRW_hx"
+      },
+      "Discrete Math - 1.1.1 Propositions, Negations, Conjunctions and Disjunctions": {
+        "title": "Discrete Math - 1.1.1 Propositions, Negations, Conjunctions and Disjunctions",
+        "thumbnailUrl": "https://i.ytimg.com/vi/A3Ffwsnad0k/mqdefault.jpg",
+        "watchTimeInSeconds": 2000,
+        "videoUrl": "https://youtu.be/A3Ffwsnad0k?si=rrkiJdp89Iuk7_jC"
+      },
+      "Stanford CS230: Deep Learning | Autumn 2018 | Lecture 1 - Class Introduction & Logistics, Andrew Ng": {
+        "title": "Stanford CS230: Deep Learning | Autumn 2018 | Lecture 1 - Class Introduction & Logistics, Andrew Ng",
+        "thumbnailUrl": "https://i.ytimg.com/vi/PySo_6S4ZAg/mqdefault.jpg",
+        "watchTimeInSeconds": 1106,
+        "videoUrl": "https://youtu.be/PySo_6S4ZAg?si=S4rgLsWlkVGn-WWM"
+      }
+    }
+  }
 }

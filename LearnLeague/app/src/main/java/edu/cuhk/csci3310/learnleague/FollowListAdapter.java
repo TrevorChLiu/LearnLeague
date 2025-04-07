@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.LinkedList;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
@@ -52,7 +53,7 @@ public class FollowListAdapter extends Adapter<edu.cuhk.csci3310.learnleague.Fol
             // Register for user item in follow list
             itemView.setOnClickListener(v -> {
                 User selectedUser = mUsersList.get((int) getItemId());
-                FragmentTransaction transaction = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction();
                 transaction.replace(containerResID, ProfileOtherFragment.newInstance(selectedUser, containerResID,
                         new OnStopProfileOtherListener() {
                             @Override

@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.learnleague;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +33,7 @@ public class ProfileJumpHelperActivity extends AppCompatActivity {
             }
         });
 
-
+        Log.d("Change activity", User.getCurrentUser().toString() + "");
     }
 
 
