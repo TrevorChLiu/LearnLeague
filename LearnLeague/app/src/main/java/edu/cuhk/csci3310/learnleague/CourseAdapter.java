@@ -73,6 +73,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         return videoId;
     }
 
+    public void updateData(List<Course> courseList) {
+        this.courseList = courseList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return courseList.size();

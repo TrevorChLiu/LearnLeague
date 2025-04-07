@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-
-
+        CoursesFragment.loadCourseList();
     }
 
     /**

@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 public class YouTubeActivity extends AppCompatActivity {
 
     private EditText youtubeLinkEditText;
@@ -31,6 +32,7 @@ public class YouTubeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_addyoutube);
 
@@ -51,7 +53,13 @@ public class YouTubeActivity extends AppCompatActivity {
                 new GetYouTubeVideoInfoTask().execute(youtubeLink);
             }
         });
+
+
     }
+
+
+
+
 
     public class GetYouTubeVideoInfoTask extends AsyncTask<String, Void, JSONObject> {
         private String youtubeLink;

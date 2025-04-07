@@ -968,5 +968,74 @@ public class ApiClient {
             }
         });
     }
+
+    public static void addCourse(String title, String thumbnailUrl, long watchTimeInSeconds, String videoUrl) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("userId", User.getCurrentUser().getUserID());
+            jsonBody.put("title", title);
+            jsonBody.put("thumbnailUrl", thumbnailUrl);
+            jsonBody.put("watchTimeInSeconds", watchTimeInSeconds);
+            jsonBody.put("videoUrl", videoUrl);
+        } catch (Exception e) {
+            Log.e("Apiclient::addCourse", e.toString());
+        }
+
+        RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/add_course")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("Apiclient::addCourse", e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("Apiclient::addCourse", "Course added");
+            }
+        });
+    }
+
+    public static void getCourses(ApiCallback<List<Course>> callback) {
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/get_courses/" + User.getCurrentUser().getUserID())
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String responseData = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseData);
+                    JSONArray jsonCourses = jsonResponse.getJSONArray("courses");
+                    List<Course> courses = new ArrayList<>();
+
+                    for (int i = 0; i < jsonCourses.length(); i++) {
+                        JSONObject jsonCourse = jsonCourses.getJSONObject(i);
+                        Course course = new Course(
+                                jsonCourse.getString("title"),
+                                jsonCourse.getString("thumbnailUrl"),
+                                jsonCourse.getLong("watchTimeInSeconds"),
+                                jsonCourse.getString("videoUrl")
+                        );
+                        courses.add(course);
+                    }
+                    callback.onSuccess(courses);
+                } catch (Exception e) {
+                    callback.onError(e);
+                }
+            }
+        });
+    }
 }
 

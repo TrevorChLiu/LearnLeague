@@ -512,7 +512,7 @@ def handle_posts():
             "id": f"post{int(datetime.now().timestamp() * 1000)}",
             "title": title,
             "content": content,
-            "userId": user_id,  # assume it's post by 1st usr
+            "userId": user_id, 
             "userName": username,
             "userAvatarUrl": user_avatar_url,
             "userAvatarVersion": user_avatar_version,
@@ -694,6 +694,47 @@ def create_comment():
     save_db(db_data)
 
     return jsonify({"comment": new_comment})
+
+@app.route('/add_course', methods=['POST'])
+def add_course():
+    db = load_db()
+    data = request.json
+    user_id = data.get('userId')
+    title = data.get('title')
+    thumbnail_url = data.get('thumbnailUrl')
+    watch_time_in_seconds = data.get('watchTimeInSeconds')
+    video_url = data.get('videoUrl')
+
+    new_course = {
+        'title': title,
+        'thumbnailUrl': thumbnail_url,
+        'watchTimeInSeconds': watch_time_in_seconds,
+        "videoUrl": video_url
+    }
+
+    users = db.get('users')
+    if users is None:
+        users = {}
+        db['users'] = users
+    
+    user = users.get(user_id)
+    if user is None:
+        user = {}
+        users[user_id] = user
+
+    user[title] = new_course
+
+    save_db(db)
+    return "Course " + title + " added."
+
+@app.route('/get_courses/<user_id>', methods=['GET'])
+def get_courses(user_id):
+    db_data = load_db()
+
+    users = db_data.get('users', {})
+    user = users.get(user_id, {})
+
+    return jsonify({"courses": list(user.values())})
 
 
 if __name__ == '__main__':

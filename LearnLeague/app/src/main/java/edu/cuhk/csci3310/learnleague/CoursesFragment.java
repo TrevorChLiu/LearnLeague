@@ -26,7 +26,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
     private static final int REQUEST_CODE_STUDY = 101;
     private RecyclerView recyclerView;
     private CourseAdapter adapter;
-    private List<Course> courseList;
+    private static List<Course> courseList;
 
     private long studyStartMillis;// 用來計時： 開始的時間
     // 用來記錄當前正在學習的course在courseList裡的index
@@ -36,15 +36,34 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
         // Required empty public constructor
     }
 
+    public static void loadCourseList() {
+        courseList = new ArrayList<>();
+
+        FileStorageHelper.loadCourses(new ApiClient.ApiCallback<List<Course>>() {
+            @Override
+            public void onSuccess(List<Course> result) {
+                courseList.clear();
+                courseList.addAll(result);
+                Log.d("LoadCourseList onSuccess", courseList.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 從文件中讀取之前保存的數據，如果沒有則初始化 demo 數據
-        courseList = FileStorageHelper.loadCourses(getContext());
+
+        /*
         if (courseList == null || courseList.isEmpty()) {
             courseList = initializeDemoData();
             FileStorageHelper.saveCourses(getContext(), courseList);
-        }
+        }*/
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +78,8 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
 
         adapter = new CourseAdapter(getContext(), courseList, this);
         recyclerView.setAdapter(adapter);
+
+        adapter.updateData(courseList);
 
         // FloatingActionButton 用來新增 YouTube 課程資料
         FloatingActionButton floatingActionButton = view.findViewById(R.id.addYouTubeLink);
@@ -106,7 +127,8 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
                 Toast.makeText(getContext(), "Successfully added：" + title, Toast.LENGTH_SHORT).show();
 
                 // 保存更新後的數據到本地文件
-                FileStorageHelper.saveCourses(getContext(), courseList);
+                // FileStorageHelper.saveCourses(getContext(), courseList);
+                FileStorageHelper.saveCourses(newCourse);
                 Toast.makeText(getContext(), "Successfully added: " + title, Toast.LENGTH_SHORT).show();
 
             } else {
@@ -123,12 +145,15 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnStudyNo
                 // 更新對應課程的觀看時間
                 Course course = courseList.get(currentCourseIndex);
                 long updatedWatchTime = course.getWatchTimeInSeconds() + elapsedSeconds;
+                // Update the users' learning time
+                User.insertStudyRecordToday((int)elapsedSeconds);
                 course.setWatchTimeInSeconds(updatedWatchTime);
                 Log.d("updatedWatchTime", "+"+updatedWatchTime);
                 adapter.notifyItemChanged(currentCourseIndex);
 
                 // 保存更新後的data到本地文件
-                FileStorageHelper.saveCourses(getContext(), courseList);
+                // FileStorageHelper.saveCourses(getContext(), courseList);
+                FileStorageHelper.saveCourses(course);
             }
         }
     }

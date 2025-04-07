@@ -165,5 +165,41 @@
       "likeCount": 0,
       "isLikedByCurrentUser": false
     }
-  ]
+  ],
+  "users": {
+    "Bob": {
+      "Stanford CS330 Deep Multi-Task & Meta Learning - What is multi-task learning? I 2022 I Lecture 1": {
+        "title": "Stanford CS330 Deep Multi-Task & Meta Learning - What is multi-task learning? I 2022 I Lecture 1",
+        "thumbnailUrl": "https://i.ytimg.com/vi/bkVCAk9Nsss/mqdefault.jpg",
+        "watchTimeInSeconds": 198,
+        "videoUrl": "https://youtu.be/bkVCAk9Nsss?si=jAgkxAgHXkCWUgt0"
+      }
+    },
+    "Trev": {
+      "Lec 1 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
+        "title": "Lec 1 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
+        "thumbnailUrl": "https://i.ytimg.com/vi/L3LMbpZIKhQ/mqdefault.jpg",
+        "watchTimeInSeconds": 0,
+        "videoUrl": "https://youtu.be/L3LMbpZIKhQ?si=70zaY8jzDlo8fxlu"
+      },
+      "Lec 2 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
+        "title": "Lec 2 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
+        "thumbnailUrl": "https://i.ytimg.com/vi/z8HKWUWS-lA/mqdefault.jpg",
+        "watchTimeInSeconds": 0,
+        "videoUrl": "https://youtu.be/z8HKWUWS-lA?si=b62fqSZGLPG3tY4f"
+      },
+      "Lec 3 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
+        "title": "Lec 3 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
+        "thumbnailUrl": "https://i.ytimg.com/vi/NuGDkmwEObM/mqdefault.jpg",
+        "watchTimeInSeconds": 0,
+        "videoUrl": "https://youtu.be/NuGDkmwEObM?si=oKr9QQUXtboUJHd2"
+      },
+      "Lec 4 | MIT 6.042J Mathematics for Computer Science, Fall 2010": {
+        "title": "Lec 4 | MIT 6.042J Mathematics for Computer Science, Fall 2010",
+        "thumbnailUrl": "https://i.ytimg.com/vi/NuY7szYSXSw/mqdefault.jpg",
+        "watchTimeInSeconds": 0,
+        "videoUrl": "https://youtu.be/NuY7szYSXSw?si=iLBh7TBt8uACtxSM"
+      }
+    }
+  }
 }
