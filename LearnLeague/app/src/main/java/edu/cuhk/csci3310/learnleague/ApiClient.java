@@ -26,7 +26,7 @@ import edu.cuhk.csci3310.learnleague.models.Post;
  */
 public class ApiClient {
     // remote server's address
-    public static final String BASE_URL = "http://192.168.31.41:5000";
+    public static final String BASE_URL = "http://192.168.59.238:5000";
     private static final OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 

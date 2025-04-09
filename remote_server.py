@@ -365,7 +365,7 @@ def drop_all_tables():
 def update_avatar(user_id):
     try:
         # Get the raw binary data from the request body
-        avatar_data = request.json
+        avatar_data = request.data
 
         if not avatar_data:
             return 'Avatar not provided!', 400
@@ -667,8 +667,6 @@ def like_comment(comment_id):
         like_list.remove(user_id)
 
     comment['likeCount'] = len(like_list)
-    print(comment)
-    print(db_data)
     save_db(db_data)
 
     return jsonify({"isLiked": user_id in like_list})

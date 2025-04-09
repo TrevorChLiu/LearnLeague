@@ -12,6 +12,7 @@ After two dependencies are downloaded:
 2. Open `my.cnf` (Linux/Mac) or `my.ini` (Windows), modify (if any) or add: *bind-address = 0.0.0.0*
 3. Open `remote_server.py`, change `user` and `password` to your own user name and password of MySQL service. (If you are not using `root`, please also run `GRANT ALL PRIVILEGES ON learn_league_db.* TO '<your_username>'@'%' IDENTIFIED BY '<your_password>';`
 )
+4. Change the `BASE_URL` in `ApiClient.java` to your local IPV4.
 
 **Before launchinging the project, please run the database server by typing: `python remote_server.py` in project's root directory.**
 
